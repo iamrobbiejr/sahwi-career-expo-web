@@ -23,6 +23,7 @@ import {useAuthStore} from '../store';
 import {authService, fileService, organizationsService, universitiesService} from '../services/api';
 import Autocomplete from '../components/common/Autocomplete';
 import {INTERESTED_AREAS, INTERESTED_COURSES} from '../utils/registrationConstants';
+import bgImage from '../assets/bg.jpg';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -228,7 +229,7 @@ const RegisterPage = () => {
     return (
         <div
             className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
-            style={{backgroundImage: "url('/src/assets/bg.jpg')"}}>
+            style={{backgroundImage: `url(${bgImage})`}}>
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
