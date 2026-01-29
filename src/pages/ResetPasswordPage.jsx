@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {useNavigate, useSearchParams, Link} from 'react-router-dom';
+import {Link, useNavigate, useSearchParams} from 'react-router-dom';
 import {motion} from 'framer-motion';
-import {FiLock, FiRefreshCw, FiAlertCircle} from 'react-icons/fi';
+import {FiAlertCircle, FiLock, FiRefreshCw} from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import bgImage from '../assets/bg.jpg';
 
 const ResetPasswordPage = () => {
     const [searchParams] = useSearchParams();
@@ -47,7 +48,8 @@ const ResetPasswordPage = () => {
 
     return (
         <div
-            className="min-h-screen bg-gradient-to-br from-primary-600 to-secondary-500 flex items-center justify-center p-4">
+            className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
+            style={{backgroundImage: `url(${bgImage})`}}>
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
