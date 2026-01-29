@@ -2,24 +2,23 @@ import React from 'react';
 import {motion} from 'framer-motion';
 import {useQuery} from '@tanstack/react-query';
 import {
-    Calendar,
-    Users,
-    User,
-    TrendingUp,
-    MessageCircle,
-    BookOpen,
     ArrowRight,
-    Clock,
-    MapPin,
-    Eye,
-    Heart,
     Award,
-    Zap,
-    Loader2
+    BookOpen,
+    Calendar,
+    Clock,
+    Eye,
+    Loader2,
+    MapPin,
+    MessageCircle,
+    TrendingUp,
+    User,
+    Users,
+    Zap
 } from 'lucide-react';
 import {useAuthStore} from '../store';
 import {Link} from 'react-router-dom';
-import {eventsService, articlesService} from '../services/api';
+import {articlesService, eventsService} from '../services/api';
 import {formatImageUrl} from '../utils/format';
 
 const HomePage = () => {
@@ -107,7 +106,7 @@ const HomePage = () => {
         >
             {/* Welcome Header */}
             <motion.div variants={itemVariants}
-                        className="bg-gradient-to-r from-primary-600 to-secondary-500 rounded-2xl p-8 text-black shadow-lg">
+                        className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-2xl p-8 text-black shadow-lg">
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold mb-2 text-white">

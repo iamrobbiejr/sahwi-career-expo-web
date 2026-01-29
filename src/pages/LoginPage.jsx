@@ -1,9 +1,8 @@
-import React from 'react';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {motion} from 'framer-motion';
 import {AlertCircle, Loader2} from 'lucide-react';
-import {FiMail, FiLock, FiLogIn} from 'react-icons/fi';
+import {FiLock, FiLogIn, FiMail} from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import {useAuthStore} from '../store';
 import {authService} from '../services/api';
@@ -47,7 +46,8 @@ const LoginPage = () => {
 
     return (
         <div
-            className="min-h-screen bg-gradient-to-br from-primary-600 to-secondary-500 flex items-center justify-center p-4">
+            className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
+            style={{backgroundImage: "url('/src/assets/bg.jpg')"}}>
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}

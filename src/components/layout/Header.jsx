@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {Bell, Menu, X, User, LogOut, Settings} from 'lucide-react';
-import {useState} from 'react';
-import {motion, AnimatePresence} from 'framer-motion';
+import {Bell, LogOut, Menu, Settings, User, X} from 'lucide-react';
+import {AnimatePresence, motion} from 'framer-motion';
 import {useAuthStore, useUIStore} from '../../store';
 import {authService} from '../../services/api';
 
@@ -58,8 +57,8 @@ const Header = () => {
                         {/* Logo */}
                         <Link to="/" className="flex items-center space-x-2">
                             <div
-                                className="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">SCE</span>
+                                className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-500 rounded-3xl flex items-center justify-center">
+                                <span className="text-white font-bold text-lg">SE</span>
                             </div>
                             <span className="hidden sm:block text-xl font-bold text-gray-900">
                 SahwiCareerExpo

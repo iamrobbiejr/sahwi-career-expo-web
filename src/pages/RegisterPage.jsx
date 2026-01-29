@@ -1,26 +1,26 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
-import {motion, AnimatePresence} from 'framer-motion';
-import {Upload, X, CheckCircle, AlertCircle, Loader2, Camera} from 'lucide-react';
+import {AnimatePresence, motion} from 'framer-motion';
+import {AlertCircle, Camera, CheckCircle, Loader2, Upload, X} from 'lucide-react';
 import {
-    FiUser,
-    FiMail,
-    FiLock,
-    FiBriefcase,
-    FiBook,
-    FiUserPlus,
-    FiChevronLeft,
     FiAward,
+    FiBook,
     FiBookOpen,
-    FiUsers,
+    FiBriefcase,
+    FiCalendar,
+    FiChevronLeft,
     FiGlobe,
+    FiLock,
+    FiMail,
     FiMapPin,
     FiPhone,
-    FiCalendar
+    FiUser,
+    FiUserPlus,
+    FiUsers
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import {useAuthStore} from '../store';
-import {authService, fileService, universitiesService, organizationsService} from '../services/api';
+import {authService, fileService, organizationsService, universitiesService} from '../services/api';
 import Autocomplete from '../components/common/Autocomplete';
 import {INTERESTED_AREAS, INTERESTED_COURSES} from '../utils/registrationConstants';
 
@@ -224,9 +224,11 @@ const RegisterPage = () => {
         }
     };
 
+
     return (
         <div
-            className="min-h-screen bg-gradient-to-br from-primary-600 to-secondary-500 flex items-center justify-center p-4">
+            className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-4"
+            style={{backgroundImage: "url('/src/assets/bg.jpg')"}}>
             <motion.div
                 initial={{opacity: 0, y: 20}}
                 animate={{opacity: 1, y: 0}}
