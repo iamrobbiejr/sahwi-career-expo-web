@@ -1,21 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {useSearchParams, useNavigate} from 'react-router-dom';
+import React, {useState} from 'react';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {
-    paymentsService,
-    paymentGatewaysService,
-    registrationsService
-} from '../services/api';
-import {
-    CreditCard,
-    Smartphone,
-    Building2,
-    ChevronRight,
-    Loader2,
-    AlertCircle,
-    ShieldCheck,
-    CheckCircle2
-} from 'lucide-react';
+import {paymentGatewaysService, paymentsService, registrationsService} from '../services/api';
+import SmileAndPayCheckout from '../components/payment/SmileAndPayCheckout';
+import {AlertCircle, CheckCircle2, ChevronRight, CreditCard, Loader2, ShieldCheck, Smartphone} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const InitiatePaymentPage = () => {
@@ -28,9 +16,32 @@ const InitiatePaymentPage = () => {
     const [phone, setPhone] = useState('');
     const [isInitiating, setIsInitiating] = useState(false);
 
+    const {data: registrations, isLoading: isLoadingRegistrations} = useQuery({
+        queryKey: ['registrations', registrationIds],
+        queryFn: async () => {
+            const responses = await Promise.all(
+                registrationIds.map(id => registrationsService.getById(id))
+            );
+            return responses.map(res => res.data.registration || res.data.data || res.data);
+        },
+        enabled: registrationIds.length > 0
+    });
+
+    const totalAmount = registrations?.reduce((sum, reg) => {
+        return sum + (reg.event?.price_cents || 0) / 100;
+    }, 0) || 0;
+
+    const currency = registrations?.[0]?.event?.currency || 'USD';
+
     const {data: gatewaysData, isLoading: isLoadingGateways} = useQuery({
         queryKey: ['payment-gateways'],
         queryFn: () => paymentGatewaysService.getAll(),
+        select: (data) => ({
+            ...data,
+            data: (data.data || []).filter(g =>
+                ['stripe', 'sahwipay', 'smile-and-pay'].includes(g.slug) && g.is_active
+            )
+        })
     });
 
     const gateways = gatewaysData?.data || [];
@@ -144,78 +155,71 @@ const InitiatePaymentPage = () => {
                     </section>
 
                     {/* Payment Method */}
-                    <section className={!selectedGateway ? 'opacity-50 pointer-events-none' : ''}>
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">2. Payment Method</h3>
-                        <div className="grid grid-cols-3 gap-4">
-                            <button
-                                onClick={() => setPaymentMethod('card')}
-                                className={`flex flex-col items-center gap-2 p-4 border-2 rounded-2xl transition-all ${
-                                    paymentMethod === 'card'
-                                        ? 'border-primary-600 bg-primary-50 text-primary-600'
-                                        : 'border-gray-100 bg-white text-gray-500'
-                                }`}
-                            >
-                                <CreditCard className="w-6 h-6"/>
-                                <span className="text-xs font-bold">Card</span>
-                            </button>
-                            <button
-                                onClick={() => setPaymentMethod('mobile_money')}
-                                className={`flex flex-col items-center gap-2 p-4 border-2 rounded-2xl transition-all ${
-                                    paymentMethod === 'mobile_money'
-                                        ? 'border-primary-600 bg-primary-50 text-primary-600'
-                                        : 'border-gray-100 bg-white text-gray-500'
-                                }`}
-                            >
-                                <Smartphone className="w-6 h-6"/>
-                                <span className="text-xs font-bold">Mobile Money</span>
-                            </button>
-                            <button
-                                onClick={() => setPaymentMethod('bank_transfer')}
-                                className={`flex flex-col items-center gap-2 p-4 border-2 rounded-2xl transition-all ${
-                                    paymentMethod === 'bank_transfer'
-                                        ? 'border-primary-600 bg-primary-50 text-primary-600'
-                                        : 'border-gray-100 bg-white text-gray-500'
-                                }`}
-                            >
-                                <Building2 className="w-6 h-6"/>
-                                <span className="text-xs font-bold">Bank</span>
-                            </button>
-                        </div>
-
-                        {paymentMethod === 'mobile_money' && (
-                            <div className="mt-6 space-y-2">
-                                <label className="text-sm font-bold text-gray-700 ml-1">Phone Number</label>
-                                <div className="relative">
-                                    <Smartphone className="absolute left-3 top-3 w-5 h-5 text-gray-400"/>
-                                    <input
-                                        type="tel"
-                                        required
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500"
-                                        placeholder="e.g. 0771234567"
-                                        value={phone}
-                                        onChange={(e) => setPhone(e.target.value)}
-                                    />
+                    {selectedGateway?.slug === 'smile-and-pay' ? (
+                        <section className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                            <h3 className="text-lg font-bold text-gray-900 mb-6">2. Smile&Pay Checkout</h3>
+                            <SmileAndPayCheckout
+                                registrationIds={registrationIds}
+                                onComplete={(result) => navigate(`/payments/${result.id}`)}
+                                onCancel={() => setSelectedGateway(null)}
+                            />
+                        </section>
+                    ) : (
+                        <>
+                            <section className={!selectedGateway ? 'opacity-50 pointer-events-none' : ''}>
+                                <h3 className="text-lg font-bold text-gray-900 mb-4">2. Payment Method</h3>
+                                <div className="grid grid-cols-3 gap-4">
+                                    <button
+                                        onClick={() => setPaymentMethod('card')}
+                                        className={`flex flex-col items-center gap-2 p-4 border-2 rounded-2xl transition-all ${
+                                            paymentMethod === 'card'
+                                                ? 'border-primary-600 bg-primary-50 text-primary-600'
+                                                : 'border-gray-100 bg-white text-gray-500'
+                                        }`}
+                                    >
+                                        <CreditCard className="w-6 h-6"/>
+                                        <span className="text-xs font-bold">Card</span>
+                                    </button>
                                 </div>
-                                <p className="text-xs text-gray-500 ml-1">You will receive a prompt on your phone to
-                                    authorize the payment.</p>
-                            </div>
-                        )}
-                    </section>
 
-                    <button
-                        onClick={handleInitiate}
-                        disabled={!selectedGateway || isInitiating}
-                        className="w-full py-4 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
-                    >
-                        {isInitiating ? (
-                            <Loader2 className="w-5 h-5 animate-spin"/>
-                        ) : (
-                            <>
-                                Confirm and Pay Now
-                                <ChevronRight className="w-5 h-5"/>
-                            </>
-                        )}
-                    </button>
+                                {paymentMethod === 'mobile_money' && (
+                                    <div className="mt-6 space-y-2">
+                                        <label className="text-sm font-bold text-gray-700 ml-1">Phone Number</label>
+                                        <div className="relative">
+                                            <Smartphone className="absolute left-3 top-3 w-5 h-5 text-gray-400"/>
+                                            <input
+                                                type="tel"
+                                                required
+                                                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500"
+                                                placeholder="e.g. 0771234567"
+                                                value={phone}
+                                                onChange={(e) => setPhone(e.target.value)}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-gray-500 ml-1">You will receive a prompt on your
+                                            phone
+                                            to
+                                            authorize the payment.</p>
+                                    </div>
+                                )}
+                            </section>
+
+                            <button
+                                onClick={handleInitiate}
+                                disabled={!selectedGateway || isInitiating}
+                                className="w-full py-4 bg-primary-600 text-white rounded-2xl font-bold hover:bg-primary-700 shadow-lg shadow-primary-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                            >
+                                {isInitiating ? (
+                                    <Loader2 className="w-5 h-5 animate-spin"/>
+                                ) : (
+                                    <>
+                                        <span>Pay Now</span>
+                                        <ChevronRight className="w-5 h-5"/>
+                                    </>
+                                )}
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Order Summary Sidebar */}
@@ -230,8 +234,17 @@ const InitiatePaymentPage = () => {
                             <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
                                 <span className="text-gray-900 font-bold">Total Amount</span>
                                 <div className="text-right">
-                                    <p className="text-2xl font-black text-primary-600">Calculating...</p>
-                                    <p className="text-xs text-gray-500">Incl. all taxes</p>
+                                    {isLoadingRegistrations ? (
+                                        <p className="text-2xl font-black text-primary-600 flex items-center justify-end gap-2">
+                                            <Loader2 className="w-5 h-5 animate-spin"/>
+                                            <span>Calculating...</span>
+                                        </p>
+                                    ) : (
+                                        <p className="text-2xl font-black text-primary-600">
+                                            {currency} {totalAmount.toFixed(2)}
+                                        </p>
+                                    )}
+                                    <p className="text-xs text-gray-500">Excl. tax</p>
                                 </div>
                             </div>
                         </div>
