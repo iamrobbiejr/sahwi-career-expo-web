@@ -64,6 +64,10 @@ export const authService = {
     me: () => apiClient.get('/auth/me'),
 };
 
+export const statsService = {
+    getMe: () => apiClient.get('/me/stats'),
+};
+
 export const eventsService = {
     getAll: (params) => apiClient.get('/events', {params}),
     getUpcoming: () => apiClient.get('/events/upcoming'),

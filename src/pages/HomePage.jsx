@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import {useAuthStore} from '../store';
 import {Link} from 'react-router-dom';
-import {articlesService, eventsService} from '../services/api';
+import {articlesService, eventsService, statsService} from '../services/api';
 import {formatImageUrl} from '../utils/format';
 
 const HomePage = () => {
@@ -57,6 +57,14 @@ const HomePage = () => {
         queryFn: () => articlesService.getTrending({limit: 4}),
     });
 
+    const {data: userStatsData} = useQuery({
+        queryKey: ['userStats'],
+        queryFn: () => statsService.getMe(),
+        enabled: isAuthenticated,
+    });
+
+    const userStats = userStatsData?.data || {};
+
     const upcomingEvents = upcomingEventsData?.data?.data || [];
     const trendingArticles = trendingArticlesData?.data?.articles || trendingArticlesData?.data?.data || [];
 
@@ -91,10 +99,30 @@ const HomePage = () => {
     ];
 
     const stats = [
-        {icon: Calendar, label: 'Events Registered', value: '3', color: 'bg-primary-500'},
-        {icon: Users, label: 'Forum Posts', value: '12', color: 'bg-secondary-500'},
-        {icon: MessageCircle, label: 'Messages', value: '8', color: 'bg-accent-500'},
-        {icon: Award, label: 'Reputation Points', value: '245', color: 'bg-purple-500'},
+        {
+            icon: Calendar,
+            label: 'Events Registered',
+            value: userStats.events_registered_count || 0,
+            color: 'bg-primary-500'
+        },
+        {
+            icon: Users,
+            label: 'Forum Posts',
+            value: userStats.forum_posts_count || 0,
+            color: 'bg-secondary-500'
+        },
+        {
+            icon: MessageCircle,
+            label: 'Messages',
+            value: userStats.unread_messages_count || 0,
+            color: 'bg-accent-500'
+        },
+        {
+            icon: Award,
+            label: 'Reputation Points',
+            value: userStats.reputation_points || 0,
+            color: 'bg-purple-500'
+        },
     ];
 
     return (
@@ -135,7 +163,7 @@ const HomePage = () => {
                             <div className="flex items-center space-x-3">
                                 <Zap className="w-12 h-12 text-yellow-300"/>
                                 <div>
-                                    <p className="text-sm text-primary-100">7-day streak!</p>
+                                    <p className="text-sm text-primary-100">{userStats.streak_days || 0}-day streak!</p>
                                     <p className="font-bold text-xl text-white">🔥 Keep it going</p>
                                 </div>
                             </div>
