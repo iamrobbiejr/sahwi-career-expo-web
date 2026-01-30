@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {Toaster} from 'react-hot-toast';
 import MainLayout from './layouts/MainLayout';
@@ -48,6 +48,9 @@ import AdminPendingVerifications from './pages/admin/users/AdminPendingVerificat
 import AdminArticleList from './pages/admin/articles/AdminArticleList';
 import AdminArticleCreate from './pages/admin/articles/AdminArticleCreate';
 import AdminArticleEdit from './pages/admin/articles/AdminArticleEdit';
+import AdminFinancialReport from './pages/admin/reports/AdminFinancialReport';
+import AdminPaymentsSummaryReport from './pages/admin/reports/AdminPaymentsSummaryReport';
+import AdminPendingCancelledReport from './pages/admin/reports/AdminPendingCancelledReport';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -377,6 +380,32 @@ function App() {
                             element={
                                 <ProtectedRoute requiredRole="admin">
                                     <AdminArticleEdit/>
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        {/* Report Routes */}
+                        <Route
+                            path="admin/reports/financial"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminFinancialReport/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="admin/reports/payments-summary"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminPaymentsSummaryReport/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="admin/reports/pending-cancelled"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminPendingCancelledReport/>
                                 </ProtectedRoute>
                             }
                         />

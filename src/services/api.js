@@ -223,6 +223,20 @@ export const donationsService = {
     donate: (campaignId, data) => apiClient.post(`/donations/campaigns/${campaignId}/donate`, data),
 };
 
+export const reportsService = {
+    getFinancial: (params) => apiClient.get('/reports/financial', {params}),
+    exportFinancial: (params) => apiClient.get('/reports/financial/export', {
+        params,
+        responseType: 'blob'
+    }),
+    getPaymentsSummary: (params) => apiClient.get('/reports/payments-summary', {params}),
+    exportPaymentsSummary: (params) => apiClient.get('/reports/payments-summary/export', {
+        params,
+        responseType: 'blob'
+    }),
+    getPendingCancelled: (params) => apiClient.get('/reports/pending-cancelled', {params}),
+};
+
 export const universitiesService = {
     getAll: () => apiClient.get('/universities'),
 };

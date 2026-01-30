@@ -1,20 +1,22 @@
 import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {
-    Home,
-    Users,
-    Calendar,
-    BookOpen,
-    MessageCircle,
-    Heart,
-    TrendingUp,
+    AlertCircle,
     Award,
-    Video,
-    Ticket,
+    BarChart2,
+    BookOpen,
+    Calendar,
     CreditCard,
-    Send
+    Heart,
+    Home,
+    MessageCircle,
+    PieChart,
+    Send,
+    Ticket,
+    TrendingUp,
+    Users,
+    Video
 } from 'lucide-react';
-import {motion} from 'framer-motion';
 import {useAuthStore} from '../../store';
 import Can from '../auth/Can';
 
@@ -63,6 +65,9 @@ const Sidebar = () => {
         {icon: Send, label: 'Email Broadcasts', path: '/admin/broadcasts'},
         {icon: CreditCard, label: 'Payment Gateways', path: '/admin/payments/gateways'},
         {icon: BookOpen, label: 'Article Management', path: '/admin/articles'},
+        {icon: BarChart2, label: 'Financial Report', path: '/admin/reports/financial'},
+        {icon: PieChart, label: 'Payments Summary', path: '/admin/reports/payments-summary'},
+        {icon: AlertCircle, label: 'Pending & Cancelled', path: '/admin/reports/pending-cancelled'},
     ];
 
     const publicLinks = [
