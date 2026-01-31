@@ -1,28 +1,28 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate, useSearchParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {paymentsService} from '../services/api';
 import {CheckCircle2, Loader2, XCircle} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const PaymentVerifyPage = () => {
-    const [searchParams] = useSearchParams();
+    const {id} = useParams();
     const navigate = useNavigate();
     const [status, setStatus] = useState('verifying'); // verifying, success, error
     const [message, setMessage] = useState('Verifying your payment...');
 
-    const paymentId = searchParams.get('payment_id') || searchParams.get('id');
+
 
     useEffect(() => {
         const verify = async () => {
-            console.log('Verifying payment...', [paymentId]);
-            if (!paymentId) {
+            console.log('Verifying payment...', [id]);
+            if (!id) {
                 setStatus('error');
                 setMessage('Missing payment information.');
                 return;
             }
 
             try {
-                const response = await paymentsService.verify(paymentId);
+                const response = await paymentsService.verify(id);
                 if (response.data.payment?.status === 'completed') {
                     setStatus('success');
                     setMessage('Payment verified successfully!');
@@ -38,7 +38,7 @@ const PaymentVerifyPage = () => {
         };
 
         verify();
-    }, [paymentId]);
+    }, [id]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
