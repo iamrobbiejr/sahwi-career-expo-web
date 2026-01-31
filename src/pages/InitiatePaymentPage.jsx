@@ -162,8 +162,6 @@ const InitiatePaymentPage = () => {
                             <h3 className="text-lg font-bold text-gray-900 mb-6">2. Smile&Pay Checkout</h3>
                             <SmileAndPayCheckout
                                 registrationIds={registrationIds}
-                                onComplete={(result) => navigate(`/payments/${result.id}`)}
-                                onCancel={() => setSelectedGateway(null)}
                             />
                         </section>
                     ) : (
