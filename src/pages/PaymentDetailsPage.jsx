@@ -1,17 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {paymentsService} from '../services/api';
-import {
-    Loader2,
-    CheckCircle2,
-    XCircle,
-    Clock,
-    ChevronLeft,
-    RefreshCw,
-    Ticket,
-    ExternalLink
-} from 'lucide-react';
+import {CheckCircle2, ChevronLeft, Clock, Loader2, RefreshCw, Ticket, XCircle} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const PaymentDetailsPage = () => {
@@ -23,6 +14,9 @@ const PaymentDetailsPage = () => {
         queryKey: ['payment', id],
         queryFn: () => paymentsService.getById(id),
     });
+
+    console.log('id', [id])
+    console.log('data', data)
 
     const payment = data?.data?.payment;
 
