@@ -78,7 +78,7 @@ const InitiatePaymentPage = () => {
             if (gateway_data.authorization_url || gateway_data.redirect_url) {
                 window.location.href = gateway_data.authorization_url || gateway_data.redirect_url;
             } else {
-                // Otherwise go to payment details page for manual verification or status checking
+                // Otherwise go to the payment details page for manual verification or status checking
                 navigate(`/payments/${payment.id}`);
             }
         } catch (err) {
