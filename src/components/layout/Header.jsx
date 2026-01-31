@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {Bell, LogOut, Menu, Settings, User, X} from 'lucide-react';
+import {Bell, LogOut, Menu, User, X} from 'lucide-react';
 import {AnimatePresence, motion} from 'framer-motion';
 import {useAuthStore, useUIStore} from '../../store';
 import {authService} from '../../services/api';
@@ -177,13 +177,13 @@ const Header = () => {
                                                     <User className="w-4 h-4 text-gray-600"/>
                                                     <span className="text-sm text-gray-700">My Profile</span>
                                                 </Link>
-                                                <Link
-                                                    to="/settings"
-                                                    className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"
-                                                >
-                                                    <Settings className="w-4 h-4 text-gray-600"/>
-                                                    <span className="text-sm text-gray-700">Settings</span>
-                                                </Link>
+                                                {/*<Link*/}
+                                                {/*    to="/settings"*/}
+                                                {/*    className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors"*/}
+                                                {/*>*/}
+                                                {/*    <Settings className="w-4 h-4 text-gray-600"/>*/}
+                                                {/*    <span className="text-sm text-gray-700">Settings</span>*/}
+                                                {/*</Link>*/}
                                                 <button
                                                     onClick={handleLogout}
                                                     className="flex items-center space-x-2 px-4 py-2 hover:bg-gray-50 transition-colors w-full text-left border-t border-gray-100 mt-2 pt-2"

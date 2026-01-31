@@ -62,6 +62,20 @@ export const authService = {
     },
     logout: () => apiClient.post('/auth/logout'),
     me: () => apiClient.get('/auth/me'),
+    getProfile: () => apiClient.get('/profile'),
+    updateProfile: (userData) => {
+        if (userData instanceof FormData) {
+            // Laravel requires POST with _method=PUT for multipart/form-data PUT requests
+            userData.append('_method', 'PUT');
+            return apiClient.post('/profile', userData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+        }
+        return apiClient.put('/profile', userData);
+    },
+    changePassword: (data) => apiClient.put('/profile/password', data),
 };
 
 export const statsService = {
