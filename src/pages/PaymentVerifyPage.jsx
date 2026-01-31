@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {paymentsService} from '../services/api';
 import {CheckCircle2, Loader2, XCircle} from 'lucide-react';
 import {toast} from 'react-hot-toast';
