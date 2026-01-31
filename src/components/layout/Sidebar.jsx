@@ -7,7 +7,6 @@ import {
     BookOpen,
     Calendar,
     CreditCard,
-    Heart,
     Home,
     MessageCircle,
     PieChart,
@@ -32,7 +31,7 @@ const Sidebar = () => {
         {icon: Users, label: 'Forums', path: '/forums'},
         {icon: BookOpen, label: 'Articles', path: '/articles'},
         {icon: MessageCircle, label: 'Messages', path: '/messages'},
-        {icon: Heart, label: 'Donations', path: '/donations'},
+        // {icon: Heart, label: 'Donations', path: '/donations'},
     ];
 
     const professionalLinks = [
