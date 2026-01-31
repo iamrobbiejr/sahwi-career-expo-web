@@ -222,7 +222,7 @@ function App() {
                             }
                         />
                         <Route
-                            path="payments/verify"
+                            path="payments/verify/:id"
                             element={
                                 <ProtectedRoute>
                                     <PaymentVerifyPage/>

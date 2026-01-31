@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {useSearchParams, useNavigate} from 'react-router-dom';
+import {useNavigate, useSearchParams} from 'react-router-dom';
 import {paymentsService} from '../services/api';
-import {Loader2, CheckCircle2, XCircle} from 'lucide-react';
+import {CheckCircle2, Loader2, XCircle} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const PaymentVerifyPage = () => {
@@ -14,6 +14,7 @@ const PaymentVerifyPage = () => {
 
     useEffect(() => {
         const verify = async () => {
+            console.log('Verifying payment...', [paymentId]);
             if (!paymentId) {
                 setStatus('error');
                 setMessage('Missing payment information.');
