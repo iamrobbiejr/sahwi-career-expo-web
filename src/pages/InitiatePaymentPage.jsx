@@ -27,9 +27,11 @@ const InitiatePaymentPage = () => {
         enabled: registrationIds.length > 0
     });
 
+
     const totalAmount = registrations?.reduce((sum, reg) => {
         return sum + (reg.event?.price_cents || 0) / 100;
     }, 0) || 0;
+
 
     const currency = registrations?.[0]?.event?.currency || 'USD';
 
