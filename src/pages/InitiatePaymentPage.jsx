@@ -74,7 +74,6 @@ const InitiatePaymentPage = () => {
 
             toast.success('Payment initiated!');
 
-            console.log(gateway_data);
 
             // If gateway provides a redirect URL, go there
             if (gateway_data.authorization_url || gateway_data.paymentUrl) {

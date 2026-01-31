@@ -30,9 +30,6 @@ const SmileAndPayCheckout = ({registrationIds}) => {
             const response = await paymentsService.initiate(payload);
             const {gateway_data} = response.data;
 
-            console.log('payload: ', payload)
-            console.log("res: ", response);
-
             if (gateway_data?.authorization_url || gateway_data?.paymentUrl) {
                 window.location.href = gateway_data.authorization_url || gateway_data.paymentUrl;
             } else {
