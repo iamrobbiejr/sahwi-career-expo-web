@@ -27,10 +27,10 @@ const Header = () => {
     const navItems = [
         {path: '/', label: 'Home'},
         ...(isAuthenticated ? [
-            {path: '/community', label: 'Community'},
+            {path: '/forums', label: 'Forums'},
             {path: '/events', label: 'Events'},
-            {path: '/learn', label: 'Learn'},
-            {path: '/connect', label: 'Connect'},
+            {path: '/articles', label: 'Articles'},
+            {path: '/messages', label: 'Connect'},
         ] : []),
     ];
 
