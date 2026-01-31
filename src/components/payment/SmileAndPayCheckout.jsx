@@ -30,8 +30,11 @@ const SmileAndPayCheckout = ({registrationIds}) => {
             const response = await paymentsService.initiate(payload);
             const {gateway_data} = response.data;
 
-            if (gateway_data?.authorization_url || gateway_data?.redirect_url) {
-                window.location.href = gateway_data.authorization_url || gateway_data.redirect_url;
+            console.log('payload: ', payload)
+            console.log("res: ", response);
+
+            if (gateway_data?.authorization_url || gateway_data?.paymentUrl) {
+                window.location.href = gateway_data.authorization_url || gateway_data.paymentUrl;
             } else {
                 toast.error('Payment gateway did not provide a redirect URL');
                 setIsInitiating(false);
