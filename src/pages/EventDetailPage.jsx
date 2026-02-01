@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {eventsService, conferenceCallsService} from '../services/api';
+import {conferenceCallsService, eventsService, registrationsService} from '../services/api';
 import {useAuthStore} from '../store';
 import {formatImageUrl} from '../utils/format';
 import {
     Calendar,
+    CheckCircle2,
+    ChevronLeft,
+    Clock,
+    Copy,
+    DollarSign,
+    ExternalLink,
+    Info,
+    Loader2,
+    Lock,
     MapPin,
     Users,
-    DollarSign,
-    Clock,
-    ChevronLeft,
-    Loader2,
-    CheckCircle2,
-    Info,
-    Video,
-    Lock,
-    ExternalLink,
-    Copy,
-    Ticket
+    Video
 } from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import RegistrationModal from '../components/events/RegistrationModal';
@@ -38,6 +37,16 @@ const EventDetailPage = () => {
     });
 
     const event = data?.data?.data;
+
+    const {data: registrationCheck, isLoading: isCheckingRegistration} = useQuery({
+        queryKey: ['check-registration', id],
+        queryFn: () => registrationsService.checkStatus(id),
+        enabled: !!id,
+    });
+
+    console.log(registrationCheck);
+
+    const isRegistered = registrationCheck?.data?.registered;
 
     const {data: meetingData, isLoading: isLoadingMeeting} = useQuery({
         queryKey: ['eventMeeting', id],
@@ -187,7 +196,7 @@ const EventDetailPage = () => {
                                 Virtual Meeting Room
                             </h2>
 
-                            {!event.is_registered ? (
+                            {!isRegistered ? (
                                 <div className="bg-accent-50 rounded-2xl p-8 text-center border border-accent-100">
                                     <Lock className="w-12 h-12 text-accent-400 mx-auto mb-4"/>
                                     <h3 className="text-lg font-bold text-gray-900">Meeting details are locked</h3>

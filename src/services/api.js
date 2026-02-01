@@ -62,20 +62,20 @@ export const authService = {
     },
     logout: () => apiClient.post('/auth/logout'),
     me: () => apiClient.get('/auth/me'),
-    getProfile: () => apiClient.get('/profile'),
+    getProfile: () => apiClient.get('/auth/profile'),
     updateProfile: (userData) => {
         if (userData instanceof FormData) {
             // Laravel requires POST with _method=PUT for multipart/form-data PUT requests
             userData.append('_method', 'PUT');
-            return apiClient.post('/profile', userData, {
+            return apiClient.post('/auth/profile', userData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
         }
-        return apiClient.put('/profile', userData);
+        return apiClient.put('/auth/profile', userData);
     },
-    changePassword: (data) => apiClient.put('/profile/password', data),
+    changePassword: (data) => apiClient.put('/auth/change-password', data),
 };
 
 export const statsService = {
@@ -304,6 +304,7 @@ export const registrationsService = {
     registerGroup: (eventId, data) => apiClient.post(`/events/${eventId}/register-group`, data),
     checkStatus: (eventId) => apiClient.get(`/events/${eventId}/registration-status`),
     getMyRegistrations: (params) => apiClient.get('/my-registrations', {params}),
+
     getById: (id) => apiClient.get(`/registrations/${id}`),
     cancel: (id, data) => apiClient.post(`/registrations/${id}/cancel`, data),
 };

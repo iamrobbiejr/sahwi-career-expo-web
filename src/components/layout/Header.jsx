@@ -145,7 +145,13 @@ const Header = () => {
                                     >
                                         <div
                                             className="w-9 h-9 bg-primary-100 rounded-full flex items-center justify-center">
-                                            <User className="w-5 h-5 text-primary-700"/>
+                                            {user?.avatar_url ? (
+                                                <img src={user?.avatar_url} alt="Avatar"
+                                                     className="w-full h-full object-cover"/>
+                                            ) : (
+                                                <User className="w-5 h-5 text-primary-700"/>
+                                            )}
+
                                         </div>
                                         <span className="hidden md:block text-sm font-medium text-gray-700">
                       {user?.name || 'Guest'}

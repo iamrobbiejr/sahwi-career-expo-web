@@ -132,7 +132,7 @@ const HomePage = () => {
             animate="visible"
             className="space-y-8"
         >
-            {/* Welcome Header */}
+            {/* Welcome, Header */}
             <motion.div variants={itemVariants}
                         className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-2xl p-8 text-black shadow-lg">
                 <div className="flex items-center justify-between">

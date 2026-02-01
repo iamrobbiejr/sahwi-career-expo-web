@@ -1,8 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {forumsService} from '../services/api';
 import ForumCard from '../components/forums/ForumCard';
 import CreateForumModal from '../components/forums/CreateForumModal';
-import {Plus, Search, Loader2} from 'lucide-react';
+import {Loader2, Plus, Search} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import {useAuthStore} from '../store';
 import Can from '../components/auth/Can';
@@ -56,7 +56,7 @@ const ForumsPage = () => {
                         />
                     </div>
 
-                    <Can perform="forums.create">
+                    <Can perform="forums.post">
                         <button
                             onClick={() => setIsModalOpen(true)}
                             className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors"

@@ -32,10 +32,9 @@ const useAuthStore = create(
 
             hasPermission: (permission) => {
                 const user = useAuthStore.getState().user;
-                if (!user || !user.permissions) return false;
-                return user.permissions.some(p =>
-                    (typeof p === 'string' ? p === permission : (p.name === permission || p.slug === permission))
-                );
+                if (!user || !user.roles || !user.roles[0]) return false;
+
+                return user.roles[0].permissions.some(p => p.name === permission);
             },
         }),
         {

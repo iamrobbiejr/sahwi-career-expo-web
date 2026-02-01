@@ -39,8 +39,8 @@ const ProfilePage = () => {
 
     const [passwordData, setPasswordData] = useState({
         current_password: '',
-        new_password: '',
-        new_password_confirmation: '',
+        password: '',
+        password_confirmation: '',
     });
 
     const [avatarPreview, setAvatarPreview] = useState(null);
@@ -167,7 +167,7 @@ const ProfilePage = () => {
 
     const handleSubmitPassword = async (e) => {
         e.preventDefault();
-        if (passwordData.new_password !== passwordData.new_password_confirmation) {
+        if (passwordData.password !== passwordData.password_confirmation) {
             toast.error('Passwords do not match');
             return;
         }
@@ -177,8 +177,8 @@ const ProfilePage = () => {
             toast.success('Password changed successfully');
             setPasswordData({
                 current_password: '',
-                new_password: '',
-                new_password_confirmation: '',
+                password: '',
+                password_confirmation: '',
             });
         } catch (error) {
             console.error('Password change failed:', error);
@@ -553,8 +553,8 @@ const ProfilePage = () => {
                                                 Password</label>
                                             <input
                                                 type="password"
-                                                name="new_password"
-                                                value={passwordData.new_password}
+                                                name="password"
+                                                value={passwordData.password}
                                                 onChange={handlePasswordChange}
                                                 required
                                                 className="input-field"
@@ -566,8 +566,8 @@ const ProfilePage = () => {
                                                 Password</label>
                                             <input
                                                 type="password"
-                                                name="new_password_confirmation"
-                                                value={passwordData.new_password_confirmation}
+                                                name="password_confirmation"
+                                                value={passwordData.password_confirmation}
                                                 onChange={handlePasswordChange}
                                                 required
                                                 className="input-field"

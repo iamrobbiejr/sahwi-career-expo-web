@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {threadsService, usersService} from '../../services/api';
 import {useAuthStore} from '../../store';
-import {X, Search, Loader2, User, Check} from 'lucide-react';
+import {Check, Loader2, Search, User, X} from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const CreateThreadModal = ({isOpen, onClose, onThreadCreated}) => {
@@ -70,7 +70,8 @@ const CreateThreadModal = ({isOpen, onClose, onThreadCreated}) => {
 
     // Role checks
     const canCreateGroup = !hasRole('student');
-    const canCreateEventChannel = hasRole('admin') || hasRole('event_creator');
+    const canCreateForum = hasRole('admin');
+    const canCreateEventChannel = hasRole('admin') || hasRole('professional') || hasRole('university');
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -113,12 +114,14 @@ const CreateThreadModal = ({isOpen, onClose, onThreadCreated}) => {
                             </button>
                             <button
                                 type="button"
+                                disabled={!canCreateForum}
                                 onClick={() => setThreadType('forum')}
                                 className={`px-4 py-2 text-sm font-medium rounded-lg border transition-all ${
                                     threadType === 'forum'
                                         ? 'bg-primary-50 border-primary-500 text-primary-700 shadow-sm'
-                                        : 'bg-white border-gray-200 text-gray-600 hover:border-primary-200'
+                                        : 'bg-white border-gray-200 text-gray-600 hover:border-primary-200 disabled:opacity-50 disabled:cursor-not-allowed'
                                 }`}
+                                title={!canCreateForum ? "Students cannot create forums" : ""}
                             >
                                 Forum
                             </button>

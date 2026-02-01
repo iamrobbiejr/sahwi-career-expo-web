@@ -4,6 +4,7 @@ import {useAuthStore} from '../../store';
 const Can = ({perform, role, children, fallback = null}) => {
     const {hasRole, hasPermission} = useAuthStore();
 
+
     let canPerform = true;
 
     if (role && !hasRole(role)) {
