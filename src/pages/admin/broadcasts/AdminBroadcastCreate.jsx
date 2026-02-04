@@ -1,22 +1,9 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {broadcastsService, universitiesService, eventsService} from '../../../services/api';
+import {broadcastsService, eventsService, universitiesService} from '../../../services/api';
 import {toast} from 'react-hot-toast';
-import {
-    ChevronLeft,
-    Send,
-    Users,
-    Calendar,
-    Building,
-    Mail,
-    Type,
-    MessageSquare,
-    Eye,
-    Paperclip,
-    X,
-    Plus
-} from 'lucide-react';
+import {Calendar, ChevronLeft, Eye, Mail, Paperclip, Plus, Send, Type, Users, X} from 'lucide-react';
 
 const AdminBroadcastCreate = () => {
     const navigate = useNavigate();
@@ -220,7 +207,7 @@ const AdminBroadcastCreate = () => {
                                     type="text"
                                     name="from_name"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    placeholder="e.g. Sahwi Team"
+                                    placeholder="e.g. EduGate Team"
                                     value={formData.from_name}
                                     onChange={handleChange}
                                 />

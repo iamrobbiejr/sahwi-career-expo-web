@@ -61,7 +61,7 @@ const Header = () => {
                                 <span className="text-white font-bold text-lg">SE</span>
                             </div>
                             <span className="hidden sm:block text-xl font-bold text-gray-900">
-                SahwiCareerExpo
+                EduGate
               </span>
                         </Link>
 

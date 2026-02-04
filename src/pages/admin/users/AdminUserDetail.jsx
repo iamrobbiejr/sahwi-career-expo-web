@@ -1,24 +1,30 @@
 import React, {useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {adminUserService, threadsService} from '../../../services/api';
 import {formatImageUrl} from '../../../utils/format';
 import {
-    User,
-    Mail,
-    Shield,
-    Calendar,
-    Clock,
-    CheckCircle,
-    XCircle,
-    Trash2,
     ArrowLeft,
+    Award,
+    Building,
+    Cake,
+    Calendar,
+    CheckCircle,
+    Clock,
+    Flame,
+    GraduationCap,
+    Mail,
+    MessageSquare,
+    School,
+    Shield,
+    Trash2,
+    User,
     UserCheck,
     UserMinus,
-    Building,
-    MessageSquare
+    XCircle
 } from 'lucide-react';
 import {toast} from 'react-hot-toast';
+import {BiLogoWhatsapp} from "react-icons/bi";
 
 const AdminUserDetail = () => {
     const {id} = useParams();
@@ -64,7 +70,6 @@ const AdminUserDetail = () => {
                 thread_type: 'direct',
                 member_ids: [user.id]
             });
-            // Handle different possible response structures
             const threadId = response.data?.data?.id || response.data?.id;
             if (threadId) {
                 navigate('/messages', {state: {selectedThreadId: threadId}});
@@ -179,9 +184,40 @@ const AdminUserDetail = () => {
                         {/* User Info */}
                         <div className="md:col-span-2 space-y-6">
                             <div>
-                                <h1 className="text-2xl font-bold text-gray-900">{user.display_name || user.name}</h1>
+                                <h1 className="text-2xl font-bold text-gray-900">
+                                    {user?.title}&nbsp;{user.display_name || user.name}
+                                </h1>
                                 <p className="text-gray-500">{user.email}</p>
+                                {user.bio && (
+                                    <p className="mt-3 text-gray-600 text-sm leading-relaxed">{user.bio}</p>
+                                )}
                             </div>
+
+                            {/* Engagement Stats */}
+                            {(user.reputation_points > 0 || user.streak_days > 0) && (
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div
+                                        className="flex items-center gap-3 p-4 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-100">
+                                        <div className="p-2 bg-amber-100 rounded-lg">
+                                            <Award className="w-5 h-5 text-amber-600"/>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Reputation</p>
+                                            <p className="text-xl font-bold text-amber-700">{user.reputation_points || 0}</p>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="flex items-center gap-3 p-4 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl border border-red-100">
+                                        <div className="p-2 bg-red-100 rounded-lg">
+                                            <Flame className="w-5 h-5 text-red-600"/>
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Streak</p>
+                                            <p className="text-xl font-bold text-red-700">{user.streak_days || 0} days</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
@@ -189,8 +225,47 @@ const AdminUserDetail = () => {
                                     <div>
                                         <p className="text-xs text-gray-500 uppercase font-semibold">Email Address</p>
                                         <p className="text-sm font-medium text-gray-900">{user.email}</p>
+                                        {user.email_verified_at && (
+                                            <p className="text-xs text-green-600 mt-0.5 flex items-center gap-1">
+                                                <CheckCircle className="w-3 h-3"/>
+                                                Verified
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
+
+                                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                                    <BiLogoWhatsapp className="w-5 h-5 text-gray-400"/>
+                                    <div>
+                                        <p className="text-xs text-gray-500 uppercase font-semibold">Phone</p>
+                                        <p className="text-sm font-medium text-gray-900">{user.whatsapp_number || 'Not provided'}</p>
+                                    </div>
+                                </div>
+
+                                {user.dob && (
+                                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                                        <Cake className="w-5 h-5 text-gray-400"/>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Date of
+                                                Birth</p>
+                                            <p className="text-sm font-medium text-gray-900">
+                                                {new Date(user.dob).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {user.expert_field && (
+                                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                                        <GraduationCap className="w-5 h-5 text-gray-400"/>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Expert
+                                                Field</p>
+                                            <p className="text-sm font-medium text-gray-900">{user.expert_field}</p>
+                                        </div>
+                                    </div>
+                                )}
+
                                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
                                     <Shield className="w-5 h-5 text-gray-400"/>
                                     <div>
@@ -198,6 +273,7 @@ const AdminUserDetail = () => {
                                         <p className="text-sm font-medium text-gray-900 capitalize">{user.role?.replace('_', ' ')}</p>
                                     </div>
                                 </div>
+
                                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
                                     <Calendar className="w-5 h-5 text-gray-400"/>
                                     <div>
@@ -207,6 +283,7 @@ const AdminUserDetail = () => {
                                         </p>
                                     </div>
                                 </div>
+
                                 <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
                                     <Clock className="w-5 h-5 text-gray-400"/>
                                     <div>
@@ -216,7 +293,60 @@ const AdminUserDetail = () => {
                                         </p>
                                     </div>
                                 </div>
+
+                                {user.streak_last_date && (
+                                    <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                                        <Flame className="w-5 h-5 text-gray-400"/>
+                                        <div>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Last
+                                                Activity</p>
+                                            <p className="text-sm font-medium text-gray-900">
+                                                {new Date(user.streak_last_date).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
+
+                            {/* Student Information */}
+                            {(user.current_school_name || user.current_grade || user.interested_area || user.interested_course) && (
+                                <div className="p-6 border border-gray-100 rounded-2xl space-y-4">
+                                    <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                                        <School className="w-5 h-5 text-primary-500"/>
+                                        Student Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        {user.current_school_name && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-semibold">Current
+                                                    School</p>
+                                                <p className="text-sm font-medium text-gray-900">{user.current_school_name}</p>
+                                            </div>
+                                        )}
+                                        {user.current_grade && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-semibold">Current
+                                                    Grade</p>
+                                                <p className="text-sm font-medium text-gray-900">{user.current_grade}</p>
+                                            </div>
+                                        )}
+                                        {user.interested_area && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-semibold">Interested
+                                                    Area</p>
+                                                <p className="text-sm font-medium text-gray-900">{user.interested_area}</p>
+                                            </div>
+                                        )}
+                                        {user.interested_course && (
+                                            <div>
+                                                <p className="text-xs text-gray-500 uppercase font-semibold">Interested
+                                                    Course</p>
+                                                <p className="text-sm font-medium text-gray-900">{user.interested_course}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
 
                             {user.organization && (
                                 <div className="p-6 border border-gray-100 rounded-2xl space-y-4">
@@ -226,24 +356,24 @@ const AdminUserDetail = () => {
                                     </h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
-                                            <p className="text-xs text-gray-500 uppercase">Name</p>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Name</p>
                                             <p className="text-sm font-medium text-gray-900">{user.organization.name}</p>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500 uppercase">Type</p>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Type</p>
                                             <p className="text-sm font-medium text-gray-900 capitalize">{user.organization.type || 'N/A'}</p>
                                         </div>
                                         <div>
-                                            <p className="text-xs text-gray-500 uppercase">Verified</p>
+                                            <p className="text-xs text-gray-500 uppercase font-semibold">Verified</p>
                                             <p className="text-sm font-medium text-gray-900">
                                                 {user.organization.verified ? (
                                                     <span className="text-green-600 flex items-center gap-1">
-                            <CheckCircle className="w-4 h-4"/> Yes
-                          </span>
+                                                        <CheckCircle className="w-4 h-4"/> Yes
+                                                    </span>
                                                 ) : (
                                                     <span className="text-red-600 flex items-center gap-1">
-                            <XCircle className="w-4 h-4"/> No
-                          </span>
+                                                        <XCircle className="w-4 h-4"/> No
+                                                    </span>
                                                 )}
                                             </p>
                                         </div>
@@ -273,26 +403,31 @@ const AdminUserDetail = () => {
                                     </select>
                                 </div>
 
-                                <div className="pt-4 border-t border-gray-200">
+                                <div className="pt-4 border-t border-gray-200 space-y-3">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-gray-600">Verification Status</span>
                                         {user.verified ? (
                                             <span
                                                 className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        <CheckCircle className="w-3 h-3"/>
-                        Verified
-                      </span>
+                                                <CheckCircle className="w-3 h-3"/>
+                                                Verified
+                                            </span>
                                         ) : (
                                             <span
                                                 className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                        <XCircle className="w-3 h-3"/>
-                        Unverified
-                      </span>
+                                                <XCircle className="w-3 h-3"/>
+                                                Unverified
+                                            </span>
                                         )}
                                     </div>
+                                    {user.verification_submitted_at && (
+                                        <p className="text-xs text-gray-500">
+                                            Submitted: {new Date(user.verification_submitted_at).toLocaleDateString()}
+                                        </p>
+                                    )}
                                     {user.verification_reviewed_at && (
-                                        <p className="mt-2 text-xs text-gray-500">
-                                            Reviewed on {new Date(user.verification_reviewed_at).toLocaleDateString()}
+                                        <p className="text-xs text-gray-500">
+                                            Reviewed: {new Date(user.verification_reviewed_at).toLocaleDateString()}
                                         </p>
                                     )}
                                 </div>

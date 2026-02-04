@@ -1,4 +1,4 @@
-# SahwiCareerExpo Platform - Frontend
+# EduGate Platform - Frontend
 
 A modern, community-focused platform for the African Professionalisation Initiative (API) PFM community built with
 React, Vite, and TailwindCSS.
@@ -217,10 +217,10 @@ This project is licensed under the MIT License.
 
 ## 🙏 Acknowledgments
 
-- SahwiCareerExpo Summit Team
+- EduGate Summit Team
 - African Professionalisation Initiative
 - All contributors and community members
 
 ---
 
-Built with ❤️ for the SahwiCareerExpo Community
+Built with ❤️ for the EduGate Community

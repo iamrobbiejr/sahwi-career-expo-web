@@ -1,21 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import {broadcastsService, universitiesService, eventsService} from '../../../services/api';
+import {broadcastsService, eventsService, universitiesService} from '../../../services/api';
 import {toast} from 'react-hot-toast';
-import {
-    ChevronLeft,
-    Save,
-    Users,
-    Calendar,
-    Building,
-    Mail,
-    Type,
-    Eye,
-    Paperclip,
-    X,
-    Plus
-} from 'lucide-react';
+import {Calendar, ChevronLeft, Eye, Mail, Save, Type, Users} from 'lucide-react';
 
 const AdminBroadcastEdit = () => {
     const {id} = useParams();
@@ -198,7 +186,7 @@ const AdminBroadcastEdit = () => {
                                     type="text"
                                     name="from_name"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-                                    placeholder="e.g. Sahwi Team"
+                                    placeholder="e.g. EduGate Team"
                                     value={formData.from_name}
                                     onChange={handleChange}
                                 />

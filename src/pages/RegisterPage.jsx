@@ -241,7 +241,7 @@ const RegisterPage = () => {
                         <FiUserPlus className="text-white text-3xl"/>
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-                    <p className="text-gray-600">Join the SahwiCareerExpo community</p>
+                    <p className="text-gray-600">Join the EduGate community</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -462,7 +462,7 @@ const RegisterPage = () => {
                                                     value={formData.current_school_name}
                                                     onChange={handleInputChange}
                                                     className="input-field pl-10"
-                                                    placeholder="Sahwi High School"
+                                                    placeholder="EduGate High School"
                                                 />
                                             </div>
                                         </div>
