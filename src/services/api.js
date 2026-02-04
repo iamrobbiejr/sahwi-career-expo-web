@@ -238,17 +238,17 @@ export const donationsService = {
 };
 
 export const reportsService = {
-    getFinancial: (params) => apiClient.get('/reports/financial', {params}),
-    exportFinancial: (params) => apiClient.get('/reports/financial/export', {
+    getFinancial: (params) => apiClient.get('/admin/reports/financial', {params}),
+    exportFinancial: (params) => apiClient.get('/admin/reports/financial/export', {
         params,
         responseType: 'blob'
     }),
-    getPaymentsSummary: (params) => apiClient.get('/reports/payments-summary', {params}),
-    exportPaymentsSummary: (params) => apiClient.get('/reports/payments-summary/export', {
+    getPaymentsSummary: (params) => apiClient.get('/admin/reports/payments-summary', {params}),
+    exportPaymentsSummary: (params) => apiClient.get('/admin/reports/payments-summary/export', {
         params,
         responseType: 'blob'
     }),
-    getPendingCancelled: (params) => apiClient.get('/reports/pending-cancelled', {params}),
+    getPendingCancelled: (params) => apiClient.get('/admin/reports/pending-cancelled', {params}),
 };
 
 export const universitiesService = {

@@ -62,6 +62,7 @@ const RegisterPage = () => {
         organisation_id: '',
         // Verification Docs
         verification_docs: [],
+        professional_verification_docs: [],
     });
 
     React.useEffect(() => {
@@ -141,10 +142,20 @@ const RegisterPage = () => {
         try {
             const response = await fileService.uploadVerificationDocs(files);
             const uploadedUrls = response.data.urls;
-            setFormData((prev) => ({
-                ...prev,
-                verification_docs: [...prev.verification_docs, ...uploadedUrls],
-            }));
+            // if a role is professional, append to professional_verification_docs, else to verification_docs
+            console.log(formData.role);
+            if (formData.role === 'professional') {
+                setFormData((prev) => ({
+                    ...prev,
+                    professional_verification_docs: [...prev.professional_verification_docs, ...uploadedUrls],
+                }));
+            } else {
+                setFormData((prev) => ({
+                    ...prev,
+                    verification_docs: [...prev.verification_docs, ...uploadedUrls],
+                }));
+            }
+
         } catch (err) {
             console.error('Upload failed:', err);
             setUploadError('Failed to upload files. Please try again.');
@@ -187,7 +198,9 @@ const RegisterPage = () => {
 
         // Validate that docs are uploaded for specific roles
         const rolesRequiringDocs = ['professional', 'company_rep', 'university'];
-        if (rolesRequiringDocs.includes(formData.role) && formData.verification_docs.length === 0) {
+        if (rolesRequiringDocs.includes(formData.role) &&
+            formData.verification_docs.length === 0 &&
+            formData.professional_verification_docs.length === 0) {
             setError('Please upload at least one verification document.');
             setIsLoading(false);
             return;
@@ -195,13 +208,30 @@ const RegisterPage = () => {
 
         try {
             const submitData = new FormData();
+            // ✅ FIX: Single loop with proper handling
             Object.keys(formData).forEach(key => {
-                if (key === 'verification_docs') {
-                    formData.verification_docs.forEach(doc => {
+                const value = formData[key];
+
+                // Skip null/undefined values
+                if (value === null || value === undefined) {
+                    return;
+                }
+
+                // Handle verification_docs array
+                if (key === 'verification_docs' && Array.isArray(value)) {
+                    value.forEach(doc => {
                         submitData.append('verification_docs[]', doc);
                     });
-                } else if (formData[key] !== null && formData[key] !== undefined) {
-                    submitData.append(key, formData[key]);
+                }
+                // Handle professional_verification_docs array
+                else if (key === 'professional_verification_docs' && Array.isArray(value)) {
+                    value.forEach(doc => {
+                        submitData.append('professional_verification_docs[]', doc);
+                    });
+                }
+                // Handle all other fields
+                else if (key !== 'verification_docs' && key !== 'professional_verification_docs') {
+                    submitData.append(key, value);
                 }
             });
 
@@ -703,6 +733,30 @@ const RegisterPage = () => {
                                             {formData.verification_docs.length > 0 && (
                                                 <div className="space-y-2">
                                                     {formData.verification_docs.map((url, index) => (
+                                                        <div key={index}
+                                                             className="flex items-center justify-between p-2 bg-green-50 rounded-lg border border-green-100">
+                                                            <div className="flex items-center overflow-hidden">
+                                                                <CheckCircle
+                                                                    className="w-4 h-4 text-green-500 mr-2 flex-shrink-0"/>
+                                                                <span
+                                                                    className="text-xs text-green-700 truncate max-w-[200px]">
+                                  {url.split('/').pop()}
+                                </span>
+                                                            </div>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => removeDoc(url)}
+                                                                className="text-gray-400 hover:text-red-500 transition-colors"
+                                                            >
+                                                                <X className="w-4 h-4"/>
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            {formData.professional_verification_docs.length > 0 && (
+                                                <div className="space-y-2">
+                                                    {formData.professional_verification_docs.map((url, index) => (
                                                         <div key={index}
                                                              className="flex items-center justify-between p-2 bg-green-50 rounded-lg border border-green-100">
                                                             <div className="flex items-center overflow-hidden">
