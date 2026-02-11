@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {articlesService} from '../services/api';
 import {formatImageUrl} from '../utils/format';
-import {Calendar, Search, ArrowRight, Loader2, User, Tag, TrendingUp, Heart, MessageSquare} from 'lucide-react';
+import {ArrowRight, Calendar, Heart, Loader2, MessageSquare, Plus, Search, Tag, TrendingUp, User} from 'lucide-react';
 import {Link} from 'react-router-dom';
 
 const ArticlesPage = () => {
@@ -65,6 +65,13 @@ const ArticlesPage = () => {
                                 onChange={handleSearch}
                             />
                         </div>
+                        <Link
+                            to="/admin/articles/create"
+                            className="flex items-center text-sm justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
+                        >
+                            <Plus className="w-5 h-5"/>
+                            <span>New Post</span>
+                        </Link>
                     </div>
 
                     {/* Active Tag Filter */}

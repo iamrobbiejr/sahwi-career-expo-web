@@ -56,7 +56,7 @@ const ForumsPage = () => {
                         />
                     </div>
 
-                    <Can perform="forums.post">
+                    <Can perform="forums.manage">
                         <button
                             onClick={() => setIsModalOpen(true)}
                             className="flex items-center space-x-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-colors"

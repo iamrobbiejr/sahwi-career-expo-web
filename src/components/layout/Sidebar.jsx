@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {
     AlertCircle,
@@ -6,6 +6,8 @@ import {
     BarChart2,
     BookOpen,
     Calendar,
+    ChevronDown,
+    ChevronRight,
     CreditCard,
     Home,
     MessageCircle,
@@ -23,6 +25,14 @@ const Sidebar = () => {
     const location = useLocation();
     const {isAuthenticated, user, hasRole, hasPermission} = useAuthStore();
     const role = user?.role;
+    const [openMenus, setOpenMenus] = useState({});
+
+    const toggleMenu = (label) => {
+        setOpenMenus(prev => ({
+            ...prev,
+            [label]: !prev[label]
+        }));
+    };
 
     const studentLinks = [
         {icon: Home, label: 'Dashboard', path: '/'},
@@ -56,17 +66,31 @@ const Sidebar = () => {
 
     const adminLinks = [
         {icon: Home, label: 'Dashboard', path: '/'},
-        {icon: Users, label: 'User Management', path: '/admin/users'},
-        {icon: Award, label: 'Verifications', path: '/admin/users/pending-verifications'},
+
         {icon: Calendar, label: 'Event Management', path: '/admin/events'},
         {icon: Ticket, label: 'All Registrations', path: '/my-registrations'},
         {icon: Video, label: 'Virtual Meetings', path: '/admin/meetings'},
         {icon: Send, label: 'Email Broadcasts', path: '/admin/broadcasts'},
         {icon: CreditCard, label: 'Payment Gateways', path: '/admin/payments/gateways'},
         {icon: BookOpen, label: 'Article Management', path: '/admin/articles'},
-        {icon: BarChart2, label: 'Financial Report', path: '/admin/reports/financial'},
-        {icon: PieChart, label: 'Payments Summary', path: '/admin/reports/payments-summary'},
-        {icon: AlertCircle, label: 'Pending & Cancelled', path: '/admin/reports/pending-cancelled'},
+        {icon: Users, label: 'Forums', path: '/forums'},
+        {
+            icon: Users,
+            label: 'IAM',
+            children: [
+                {icon: Users, label: 'All Users', path: '/admin/users'},
+                {icon: Award, label: 'Verifications', path: '/admin/users/pending-verifications'},
+            ]
+        },
+        {
+            icon: BarChart2,
+            label: 'Reports',
+            children: [
+                {icon: BarChart2, label: 'Financial Report', path: '/admin/reports/financial'},
+                {icon: PieChart, label: 'Payments Summary', path: '/admin/reports/payments-summary'},
+                {icon: AlertCircle, label: 'Pending & Cancelled', path: '/admin/reports/pending-cancelled'},
+            ]
+        },
     ];
 
     const publicLinks = [
@@ -92,14 +116,60 @@ const Sidebar = () => {
             <nav className="p-4 space-y-2">
                 {links.map((link) => {
                     const Icon = link.icon;
+
+                    if (link.children) {
+                        const isOpen = openMenus[link.label];
+                        const isChildActive = link.children.some(child => isActive(child.path));
+
+                        return (
+                            <div key={link.label}>
+                                <button
+                                    onClick={() => toggleMenu(link.label)}
+                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${isChildActive || isOpen
+                                        ? 'bg-primary-50 text-primary-700 font-medium'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                    }`}
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <Icon
+                                            className={`w-5 h-5 ${isChildActive || isOpen ? 'text-primary-600' : 'text-gray-500'}`}/>
+                                        <span>{link.label}</span>
+                                    </div>
+                                    {isOpen ? <ChevronDown size={16}/> : <ChevronRight size={16}/>}
+                                </button>
+
+                                {isOpen && (
+                                    <div className="ml-4 mt-1 space-y-1">
+                                        {link.children.map((child) => {
+                                            const ChildIcon = child.icon;
+                                            return (
+                                                <Link
+                                                    key={child.path}
+                                                    to={child.path}
+                                                    className={`flex items-center space-x-3 px-4 py-2 rounded-lg text-sm transition-all duration-200 ${isActive(child.path)
+                                                        ? 'bg-primary-50 text-primary-700 font-medium'
+                                                        : 'text-gray-600 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    <ChildIcon size={16}
+                                                               className={`${isActive(child.path) ? 'text-primary-600' : 'text-gray-400'}`}/>
+                                                    <span>{child.label}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    }
+
                     return (
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                                isActive(link.path)
-                                    ? 'bg-primary-50 text-primary-700 font-medium'
-                                    : 'text-gray-700 hover:bg-gray-100'
+                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive(link.path)
+                                ? 'bg-primary-50 text-primary-700 font-medium'
+                                : 'text-gray-700 hover:bg-gray-100'
                             }`}
                         >
                             <Icon className={`w-5 h-5 ${isActive(link.path) ? 'text-primary-600' : 'text-gray-500'}`}/>
@@ -115,22 +185,16 @@ const Sidebar = () => {
                     <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-lg p-4">
                         <h3 className="font-semibold text-gray-900 mb-3 text-sm">Quick Actions</h3>
                         <div className="space-y-2">
-                            <Can perform="forums.post">
-                                <button
-                                    className="w-full bg-white text-primary-600 text-sm font-medium py-2 px-3 rounded-lg hover:shadow-md transition-all">
-                                    Create Post
-                                </button>
-                            </Can>
 
                             <Can perform="events.create">
                                 <button
                                     className="w-full bg-white text-secondary-600 text-sm font-medium py-2 px-3 rounded-lg hover:shadow-md transition-all">
-                                    Register Event
+                                    Create Event
                                 </button>
                             </Can>
 
                             <Link to={'/messages'}
-                                  className="w-full bg-white text-accent-600 text-sm font-medium py-2 px-3 rounded-lg hover:shadow-md transition-all">
+                                  className="w-full bg-white text-accent-600 text-sm font-medium py-2 px-8 rounded-lg hover:shadow-md transition-all">
                                 Start Message
                             </Link>
                         </div>
@@ -139,20 +203,20 @@ const Sidebar = () => {
             )}
 
             {/* Trending Topics */}
-            <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-3 text-sm">Trending Topics</h3>
-                <div className="space-y-2">
-                    {['#DataScience', '#CareerTips', '#AIinFinance', '#Networking'].map((tag) => (
-                        <Link
-                            key={tag}
-                            to={`/forums?tag=${tag.slice(1)}`}
-                            className="block text-sm text-primary-600 hover:text-primary-700 hover:underline"
-                        >
-                            {tag}
-                        </Link>
-                    ))}
-                </div>
-            </div>
+            {/*<div className="p-4">*/}
+            {/*    <h3 className="font-semibold text-gray-900 mb-3 text-sm">Trending Topics</h3>*/}
+            {/*    <div className="space-y-2">*/}
+            {/*        {['#DataScience', '#CareerTips', '#AIinFinance', '#Networking'].map((tag) => (*/}
+            {/*            <Link*/}
+            {/*                key={tag}*/}
+            {/*                to={`/forums?tag=${tag.slice(1)}`}*/}
+            {/*                className="block text-sm text-primary-600 hover:text-primary-700 hover:underline"*/}
+            {/*            >*/}
+            {/*                {tag}*/}
+            {/*            </Link>*/}
+            {/*        ))}*/}
+            {/*    </div>*/}
+            {/*</div>*/}
         </aside>
     );
 };

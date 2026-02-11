@@ -370,7 +370,7 @@ function App() {
                         <Route
                             path="admin/articles/create"
                             element={
-                                <ProtectedRoute requiredRole="admin">
+                                <ProtectedRoute requiredPermission="articles.comment">
                                     <AdminArticleCreate/>
                                 </ProtectedRoute>
                             }

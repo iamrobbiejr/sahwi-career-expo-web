@@ -14,7 +14,7 @@ const PaymentVerifyPage = () => {
 
     useEffect(() => {
         const verify = async () => {
-            console.log('Verifying payment...', [id]);
+
             if (!id) {
                 setStatus('error');
                 setMessage('Missing payment information.');

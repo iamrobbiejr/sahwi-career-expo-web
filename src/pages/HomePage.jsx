@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import {useAuthStore} from '../store';
 import {Link} from 'react-router-dom';
-import {articlesService, eventsService, statsService} from '../services/api';
+import {articlesService, eventsService, forumsService, statsService} from '../services/api';
 import {formatImageUrl} from '../utils/format';
 
 const HomePage = () => {
@@ -68,35 +68,14 @@ const HomePage = () => {
     const upcomingEvents = upcomingEventsData?.data?.data || [];
     const trendingArticles = trendingArticlesData?.data?.articles || trendingArticlesData?.data?.data || [];
 
-    const trendingDiscussions = [
-        {
-            id: 1,
-            title: 'How to transition from academic to industry data science?',
-            author: 'student_jay',
-            replies: 15,
-            views: 234,
-            timeAgo: '2h ago',
-            tag: 'Career',
-        },
-        {
-            id: 2,
-            title: 'Best practices for API security in financial systems',
-            author: 'prof_smith',
-            replies: 8,
-            views: 156,
-            timeAgo: '5h ago',
-            tag: 'Technical',
-        },
-        {
-            id: 3,
-            title: 'Networking tips for introverted professionals',
-            author: 'career_coach',
-            replies: 23,
-            views: 412,
-            timeAgo: '1d ago',
-            tag: 'Networking',
-        },
-    ];
+    const {data: hotDiscussionsData, isLoading: isLoadingDiscussions} = useQuery({
+        queryKey: ['hotDiscussions'],
+        queryFn: () => forumsService.getHottestPosts(),
+    });
+
+
+    const hotDiscussions = hotDiscussionsData?.data?.data || hotDiscussionsData?.data || [];
+
 
     const stats = [
         {
@@ -243,35 +222,34 @@ const HomePage = () => {
                                             <div className="flex-1 p-6">
                                                 <div className="flex items-start justify-between mb-3">
                                                     <div>
-                            <span
-                                className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 ${
-                                    (event.location_type === 'virtual' || event.venue?.toLowerCase() === 'virtual' || event.venue?.toLowerCase() === 'online')
-                                        ? 'bg-accent-100 text-accent-700'
-                                        : 'bg-primary-100 text-primary-700'
-                                }`}>
-                              {(event.location_type === 'virtual' || event.venue?.toLowerCase() === 'virtual' || event.venue?.toLowerCase() === 'online') ? 'Virtual' : 'In-Person'}
-                            </span>
+                                                        <span
+                                                            className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 ${(event.location_type === 'virtual' || event.venue?.toLowerCase() === 'virtual' || event.venue?.toLowerCase() === 'online')
+                                                                ? 'bg-accent-100 text-accent-700'
+                                                                : 'bg-primary-100 text-primary-700'
+                                                            }`}>
+                                                            {(event.location_type === 'virtual' || event.venue?.toLowerCase() === 'virtual' || event.venue?.toLowerCase() === 'online') ? 'Virtual' : 'In-Person'}
+                                                        </span>
                                                         <h3 className="text-xl font-bold text-gray-900">{event.name}</h3>
                                                     </div>
                                                 </div>
                                                 <div
                                                     className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
-                          <span className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1 text-primary-500"/>
-                              {new Date(event.start_date).toLocaleDateString(undefined, {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric'
-                              })}
-                          </span>
                                                     <span className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        <Clock className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        {new Date(event.start_date).toLocaleDateString(undefined, {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            year: 'numeric'
+                                                        })}
+                                                    </span>
+                                                    <span className="flex items-center">
+                                                        <MapPin className="w-4 h-4 mr-1 text-primary-500"/>
                                                         {event.venue}{event.location ? `, ${event.location}` : ''}
-                          </span>
+                                                    </span>
                                                     <span className="flex items-center">
-                            <Users className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        <Users className="w-4 h-4 mr-1 text-primary-500"/>
                                                         {event.registrations || 0} registered
-                          </span>
+                                                    </span>
                                                 </div>
                                                 <div className="flex space-x-3">
                                                     <Link to={`/events/${event.id}`} className="btn-primary">
@@ -336,14 +314,14 @@ const HomePage = () => {
                                                 </h3>
                                                 <div
                                                     className="flex items-center justify-between text-sm text-gray-600">
-                          <span className="flex items-center">
-                            <User className="w-3.5 h-3.5 mr-1 text-primary-500"/>
-                              {article.author?.name || 'Anonymous'}
-                          </span>
                                                     <span className="flex items-center">
-                            <Clock className="w-3.5 h-3.5 mr-1 text-primary-500"/>
+                                                        <User className="w-3.5 h-3.5 mr-1 text-primary-500"/>
+                                                        {article.author?.name || 'Anonymous'}
+                                                    </span>
+                                                    <span className="flex items-center">
+                                                        <Clock className="w-3.5 h-3.5 mr-1 text-primary-500"/>
                                                         {new Date(article.published_at || article.created_at).toLocaleDateString()}
-                          </span>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </Link>
@@ -365,35 +343,49 @@ const HomePage = () => {
                             </h2>
                         </div>
                         <div className="space-y-3">
-                            {trendingDiscussions.map((discussion) => (
-                                <Link
-                                    key={discussion.id}
-                                    to={isAuthenticated ? `/forums/${discussion.id}` : '/login'}
-                                    className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-300 hover:shadow-md transition-all"
-                                >
-                                    <div className="flex items-start justify-between mb-2">
-                                        <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
-                                            {discussion.title}
-                                        </h3>
-                                    </div>
-                                    <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span className="flex items-center">
-                      <MessageCircle className="w-3 h-3 mr-1"/>
-                        {discussion.replies} replies
-                    </span>
-                                        <span className="flex items-center">
-                      <Eye className="w-3 h-3 mr-1"/>
-                                            {discussion.views} views
-                    </span>
-                                    </div>
-                                    <div className="flex items-center justify-between mt-2">
-                    <span className="text-xs text-primary-600 font-medium">
-                      #{discussion.tag}
-                    </span>
-                                        <span className="text-xs text-gray-500">{discussion.timeAgo}</span>
-                                    </div>
-                                </Link>
-                            ))}
+                            {isLoadingDiscussions ? (
+                                <div className="flex items-center justify-center py-8">
+                                    <Loader2 className="w-6 h-6 text-secondary-500 animate-spin"/>
+                                </div>
+                            ) : hotDiscussions && hotDiscussions.length > 0 ? (
+                                hotDiscussions.map((discussion) => (
+                                    <Link
+                                        key={discussion.id}
+                                        to={isAuthenticated ? `/forums/${discussion?.forum?.id}/posts/${discussion.id}` : '/login'}
+                                        className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-300 hover:shadow-md transition-all"
+                                    >
+                                        <div className="flex items-start justify-between mb-2">
+                                            <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
+                                                {discussion.title}
+                                            </h3>
+                                        </div>
+                                        <div className="flex items-center justify-between text-xs text-gray-500">
+                                            <span className="flex items-center">
+                                                <MessageCircle className="w-3 h-3 mr-1"/>
+                                                {discussion.comment_count || 0} replies
+                                            </span>
+                                            <span className="flex items-center">
+                                                <Eye className="w-3 h-3 mr-1"/>
+                                                {discussion.view_count || 0} views
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-2">
+                                            <span className="text-xs text-primary-600 font-medium">
+                                                #{discussion.category || 'General'}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                {new Date(discussion.created_at).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                ))
+                            ) : (
+                                <div
+                                    className="text-center py-8 bg-white rounded-lg border border-dashed border-gray-200">
+                                    <MessageCircle className="w-8 h-8 text-gray-300 mx-auto mb-2"/>
+                                    <p className="text-sm text-gray-500 font-medium">No hot discussions yet.</p>
+                                </div>
+                            )}
                         </div>
                         <Link
                             to="/forums"
@@ -402,6 +394,7 @@ const HomePage = () => {
                             View All Discussions →
                         </Link>
                     </motion.div>
+
 
                     {/* Connection Suggestions */}
                     <motion.div variants={itemVariants}

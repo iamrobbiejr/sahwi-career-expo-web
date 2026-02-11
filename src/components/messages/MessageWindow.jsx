@@ -1,6 +1,6 @@
-import React, {useEffect, useState, useCallback} from 'react';
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
-import {threadsService, messagesService} from '../../services/api';
+import React, {useCallback, useState} from 'react';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {messagesService, threadsService} from '../../services/api';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import {useAuthStore} from '../../store';
@@ -23,6 +23,8 @@ const MessageWindow = ({threadId}) => {
     });
 
     const thread = threadData?.data;
+
+
     const messages = messagesData?.data?.data || [];
 
     const sendMessageMutation = useMutation({
@@ -133,10 +135,12 @@ const MessageWindow = ({threadId}) => {
                 <div className="flex items-center gap-3">
                     <div
                         className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                        {(thread?.title || 'T').charAt(0).toUpperCase()}
+                        {(thread?.creator?.name || 'T').charAt(0).toUpperCase()}
                     </div>
                     <div>
-                        <h2 className="font-bold text-gray-900">{thread?.title || 'Direct Message'}</h2>
+                        <h2 className="font-bold text-gray-900">
+                            {thread?.thread_type === 'direct' ? thread?.members[1]?.user?.name : thread?.title}
+                        </h2>
                         <p className="text-xs text-gray-500">
                             {thread?.member_count || 0} members
                         </p>

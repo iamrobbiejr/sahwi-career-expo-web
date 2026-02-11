@@ -143,7 +143,7 @@ const RegisterPage = () => {
             const response = await fileService.uploadVerificationDocs(files);
             const uploadedUrls = response.data.urls;
             // if a role is professional, append to professional_verification_docs, else to verification_docs
-            console.log(formData.role);
+
             if (formData.role === 'professional') {
                 setFormData((prev) => ({
                     ...prev,

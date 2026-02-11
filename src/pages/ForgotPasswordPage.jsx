@@ -12,7 +12,7 @@ const ForgotPasswordPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         // API call to send reset link
-        console.log('Resetting password for:', email);
+
         toast.success('Reset link sent to your email!');
         setIsSubmitted(true);
     };

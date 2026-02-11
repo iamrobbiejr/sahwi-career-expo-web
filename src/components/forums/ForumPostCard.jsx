@@ -1,9 +1,9 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import {MessageSquare, ThumbsUp, Eye, User, Calendar, Pin, Lock} from 'lucide-react';
+import {Calendar, Eye, Lock, MessageSquare, Pin, User} from 'lucide-react';
 import {formatDistanceToNow} from 'date-fns';
 
-const ForumPostCard = ({forumId, post}) => {
+const ForumPostCard = ({forumId, post, onClick}) => {
     return (
         <div
             className={`bg-white rounded-xl shadow-sm border ${post.is_pinned ? 'border-primary-200 bg-primary-50/10' : 'border-gray-200'} p-6 hover:shadow-md transition-shadow`}>
@@ -13,24 +13,27 @@ const ForumPostCard = ({forumId, post}) => {
                         {post.is_pinned && (
                             <span
                                 className="flex items-center text-xs font-semibold text-primary-600 bg-primary-50 px-2 py-0.5 rounded-full">
-                <Pin className="w-3 h-3 mr-1"/>
-                Pinned
-              </span>
+                                <Pin className="w-3 h-3 mr-1"/>
+                                Pinned
+                            </span>
                         )}
                         {post.is_locked && (
                             <span
                                 className="flex items-center text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full">
-                <Lock className="w-3 h-3 mr-1"/>
-                Locked
-              </span>
+                                <Lock className="w-3 h-3 mr-1"/>
+                                Locked
+                            </span>
                         )}
                         <span
                             className="text-xs font-medium text-secondary-600 bg-secondary-50 px-2 py-0.5 rounded-full">
-              {post.category || 'General'}
-            </span>
+                            {post.category || 'General'}
+                        </span>
                     </div>
 
-                    <Link to={`/forums/${forumId}/posts/${post.id}`}>
+                    <Link
+                        to={`/forums/${forumId}/posts/${post.id}`}
+                        onClick={onClick}
+                    >
                         <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-primary-600 transition-colors line-clamp-1">
                             {post.title}
                         </h3>

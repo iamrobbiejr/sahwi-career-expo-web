@@ -15,9 +15,6 @@ const PaymentDetailsPage = () => {
         queryFn: () => paymentsService.getById(id),
     });
 
-    console.log('id', [id])
-    console.log('data', data)
-
     const payment = data?.data?.payment;
 
     const handleVerify = async () => {

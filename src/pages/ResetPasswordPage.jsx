@@ -25,7 +25,7 @@ const ResetPasswordPage = () => {
         setError('');
 
         // API call to reset password
-        console.log('Resetting password for:', email, 'with token:', token);
+
         toast.success('Password reset successful!');
         setIsSuccess(true);
         setTimeout(() => navigate('/login'), 2000);

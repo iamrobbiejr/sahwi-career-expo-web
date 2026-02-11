@@ -135,7 +135,10 @@ export const forumsService = {
     delete: (id) => apiClient.delete(`/forums/${id}`),
     join: (id) => apiClient.post(`/forums/${id}/join`),
     leave: (id) => apiClient.post(`/forums/${id}/leave`),
+    remove: (userId, forumId) => apiClient.post(`/forums/${forumId}/members/${userId}`),
     getMembers: (id) => apiClient.get(`/forums/${id}/members`),
+    checkMembership: (forumId) => apiClient.get(`/forums/${forumId}/membership`),
+    getHottestPosts: () => apiClient.get('/forums/posts/hottest-posts'),
 };
 
 export const forumPostsService = {

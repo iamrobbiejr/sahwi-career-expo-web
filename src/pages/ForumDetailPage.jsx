@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {useParams, Link} from 'react-router-dom';
-import {forumsService, forumPostsService} from '../services/api';
+import React, {useEffect, useState} from 'react';
+import {Link, useParams} from 'react-router-dom';
+import {forumPostsService, forumsService} from '../services/api';
 import ForumPostCard from '../components/forums/ForumPostCard';
 import CreatePostModal from '../components/forums/CreatePostModal';
-import {Plus, Search, Loader2, ArrowLeft, Users, MessageSquare, Info} from 'lucide-react';
+import ForumMembersModal from '../components/forums/ForumMembersModal';
+import JoinForumWarningModal from '../components/forums/JoinForumWarningModal';
+import {ArrowLeft, Info, Loader2, LogOut, MessageSquare, Plus, Search, UserPlus, Users} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 import Can from '../components/auth/Can';
 
@@ -15,9 +17,15 @@ const ForumDetailPage = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('latest');
     const [isPostModalOpen, setIsPostModalOpen] = useState(false);
+    const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
+    const [isMember, setIsMember] = useState(false);
+    const [checkingMembership, setCheckingMembership] = useState(true);
+    const [joining, setJoining] = useState(false);
+    const [isJoinWarningModalOpen, setIsJoinWarningModalOpen] = useState(false);
 
     useEffect(() => {
         fetchForumDetails();
+        checkMembershipStatus();
     }, [id]);
 
     useEffect(() => {
@@ -44,6 +52,62 @@ const ForumDetailPage = () => {
             toast.error('Failed to load posts');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const checkMembershipStatus = async () => {
+        try {
+            const response = await forumsService.checkMembership(id);
+            // Assuming the API returns { is_member: boolean } or similar
+            setIsMember(response.data.is_member || response.data.data?.is_member || false);
+        } catch (error) {
+            console.error('Failed to check membership:', error);
+        } finally {
+            setCheckingMembership(false);
+        }
+    };
+
+    const handleJoin = async () => {
+        try {
+            setJoining(true);
+            await forumsService.join(id);
+            setIsMember(true);
+            toast.success('Joined forum successfully');
+            fetchForumDetails(); // Refresh member count
+        } catch (error) {
+            console.error('Failed to join forum:', error);
+            toast.error('Failed to join forum');
+        } finally {
+            setJoining(false);
+        }
+    };
+
+    const handleLeave = async () => {
+        if (!window.confirm('Are you sure you want to leave this forum?')) return;
+
+        try {
+            setJoining(true);
+            await forumsService.leave(id);
+            setIsMember(false);
+            toast.success('Left forum successfully');
+            fetchForumDetails(); // Refresh member count
+        } catch (error) {
+            console.error('Failed to leave forum:', error);
+            toast.error('Failed to leave forum');
+        } finally {
+            setJoining(false);
+        }
+    };
+
+    const handleJoinFromModal = async () => {
+        await handleJoin();
+        setIsJoinWarningModalOpen(false);
+    };
+
+    const handlePostClick = (e) => {
+        if (!isMember) {
+            e.preventDefault();
+            setIsJoinWarningModalOpen(true);
         }
     };
 
@@ -100,30 +164,63 @@ const ForumDetailPage = () => {
                             <p className="text-gray-600 mt-2 max-w-2xl">{forum.description}</p>
 
                             <div className="flex items-center gap-4 mt-4 text-sm text-gray-500">
-                <span className="flex items-center">
-                  <Users className="w-4 h-4 mr-1.5"/>
-                    {forum.member_count || 0} Members
-                </span>
                                 <span className="flex items-center">
-                  <MessageSquare className="w-4 h-4 mr-1.5"/>
+                                    <Users className="w-4 h-4 mr-1.5"/>
+                                    {forum.member_count || 0} Members
+                                </span>
+                                <span className="flex items-center">
+                                    <MessageSquare className="w-4 h-4 mr-1.5"/>
                                     {forum.post_count || 0} Posts
-                </span>
+                                </span>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <button
-                                className="flex-1 md:flex-none px-6 py-2.5 rounded-xl font-semibold border border-primary-600 text-primary-600 hover:bg-primary-50 transition-colors">
-                                Join Forum
-                            </button>
-                            <Can perform="forums.post">
+                            <Can perform="forums.manage">
                                 <button
-                                    onClick={() => setIsPostModalOpen(true)}
-                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
+                                    onClick={() => setIsMembersModalOpen(true)}
+                                    className="flex-1 md:flex-none px-4 py-2.5 rounded-xl font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
                                 >
-                                    <Plus className="w-5 h-5"/>
-                                    New Post
+                                    <Users className="w-4 h-4"/>
+                                    Members
                                 </button>
+                            </Can>
+
+                            {!checkingMembership && (
+                                <button
+                                    onClick={isMember ? handleLeave : handleJoin}
+                                    disabled={joining}
+                                    className={`flex-1 md:flex-none px-6 py-2.5 rounded-xl font-semibold border transition-colors flex items-center justify-center gap-2 ${isMember
+                                        ? 'border-red-200 text-red-600 hover:bg-red-50'
+                                        : 'border-primary-600 text-primary-600 hover:bg-primary-50'
+                                    }`}
+                                >
+                                    {joining ? (
+                                        <Loader2 className="w-4 h-4 animate-spin"/>
+                                    ) : isMember ? (
+                                        <>
+                                            <LogOut className="w-4 h-4"/>
+                                            Leave
+                                        </>
+                                    ) : (
+                                        <>
+                                            <UserPlus className="w-4 h-4"/>
+                                            Join
+                                        </>
+                                    )}
+                                </button>
+                            )}
+
+                            <Can perform="forums.post">
+                                {!checkingMembership && isMember && (
+                                    <button
+                                        onClick={() => setIsPostModalOpen(true)}
+                                        className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-primary-700 transition-colors"
+                                    >
+                                        <Plus className="w-5 h-5"/>
+                                        New Post
+                                    </button>
+                                )}
                             </Can>
                         </div>
                     </div>
@@ -135,6 +232,20 @@ const ForumDetailPage = () => {
                 onClose={() => setIsPostModalOpen(false)}
                 forumId={id}
                 onPostCreated={fetchPosts}
+            />
+
+            <ForumMembersModal
+                isOpen={isMembersModalOpen}
+                onClose={() => setIsMembersModalOpen(false)}
+                forumId={id}
+                forumTitle={forum?.title}
+            />
+
+            <JoinForumWarningModal
+                isOpen={isJoinWarningModalOpen}
+                onClose={() => setIsJoinWarningModalOpen(false)}
+                onJoin={handleJoinFromModal}
+                isJoining={joining}
             />
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -176,7 +287,12 @@ const ForumDetailPage = () => {
             ) : filteredPosts.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4">
                     {filteredPosts.map((post) => (
-                        <ForumPostCard key={post.id} forumId={id} post={post}/>
+                        <ForumPostCard
+                            key={post.id}
+                            forumId={id}
+                            post={post}
+                            onClick={handlePostClick}
+                        />
                     ))}
                 </div>
             ) : (

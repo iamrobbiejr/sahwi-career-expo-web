@@ -11,6 +11,7 @@ const ThreadItem = ({thread, isSelected, onClick}) => {
         if (thread.thread_type === 'direct') {
             const otherMember = thread.members?.find(m => m.user_id !== user?.id);
 
+
             return thread?.creator?.name || 'Direct Message';
         }
 
@@ -31,10 +32,10 @@ const ThreadItem = ({thread, isSelected, onClick}) => {
                     className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-lg">
                     {getThreadTitle().charAt(0).toUpperCase()}
                 </div>
-                {thread.unread_count > 0 && (
+                {thread.message_count > 0 && (
                     <span
                         className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full border-2 border-white">
-            {thread.unread_count}
+            {thread.message_count}
           </span>
                 )}
             </div>
@@ -42,7 +43,7 @@ const ThreadItem = ({thread, isSelected, onClick}) => {
             <div className="flex-1 min-w-0">
                 <div className="flex justify-between items-baseline mb-1">
                     <div className="flex items-center gap-2 min-w-0">
-                        <h3 className={`font-semibold truncate ${thread.unread_count > 0 ? 'text-gray-900' : 'text-gray-700'}`}>
+                        <h3 className={`font-semibold truncate ${thread.message_count > 0 ? 'text-gray-900' : 'text-gray-700'}`}>
                             {getThreadTitle()}
                         </h3>
                         {thread.thread_type !== 'direct' && (
@@ -59,7 +60,7 @@ const ThreadItem = ({thread, isSelected, onClick}) => {
                     )}
                 </div>
 
-                <p className={`text-sm truncate ${thread.unread_count > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+                <p className={`text-sm truncate ${thread.message_count > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
                     {lastMessage ? lastMessage.content : 'No messages yet'}
                 </p>
             </div>

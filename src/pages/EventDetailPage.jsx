@@ -44,7 +44,6 @@ const EventDetailPage = () => {
         enabled: !!id,
     });
 
-    console.log(registrationCheck);
 
     const isRegistered = registrationCheck?.data?.registered;
 
