@@ -1,22 +1,10 @@
 import React from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {registrationsService} from '../services/api';
-import {
-    Loader2,
-    Calendar,
-    MapPin,
-    Ticket as TicketIcon,
-    CreditCard,
-    ChevronRight,
-    Search,
-    Filter,
-    AlertCircle,
-    Clock,
-    CheckCircle2,
-    XCircle
-} from 'lucide-react';
+import {Calendar, CreditCard, Filter, Loader2, Mailbox, MapPin, Ticket as TicketIcon} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {formatImageUrl} from '../utils/format';
+import {BiUser} from "react-icons/bi";
 
 const MyRegistrationsPage = () => {
     const navigate = useNavigate();
@@ -114,6 +102,14 @@ const MyRegistrationsPage = () => {
                                 <h3 className="text-xl font-bold text-gray-900 line-clamp-1 mb-4">{reg.event?.name}</h3>
 
                                 <div className="space-y-3 mb-6">
+                                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                                        <BiUser className="w-4 h-4 text-primary-500"/>
+                                        <span className="line-clamp-1">{reg.attendee_name}</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                                        <Mailbox className="w-4 h-4 text-primary-500"/>
+                                        <span className="line-clamp-1">{reg.attendee_email}</span>
+                                    </div>
                                     <div className="flex items-center gap-3 text-sm text-gray-600">
                                         <Calendar className="w-4 h-4 text-primary-500"/>
                                         <span>{new Date(reg.event?.start_date).toLocaleDateString(undefined, {
