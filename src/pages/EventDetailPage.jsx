@@ -376,16 +376,17 @@ const EventDetailPage = () => {
 
                         <button
                             onClick={handleRegister}
-                            disabled={isRegistering || event.is_registered}
+                            disabled={isRegistering || isRegistered}
                             className={`w-full py-4 rounded-2xl font-bold transition-all shadow-lg flex items-center justify-center gap-2 ${
-                                event.is_registered
+                                isRegistered
                                     ? 'bg-green-500 text-white cursor-default'
                                     : 'bg-primary-600 text-white hover:bg-primary-700 shadow-primary-200'
                             }`}
                         >
+
                             {isRegistering ? (
                                 <Loader2 className="w-5 h-5 animate-spin"/>
-                            ) : event.is_registered ? (
+                            ) : isRegistered ? (
                                 <>
                                     <CheckCircle2 className="w-5 h-5"/>
                                     Registered

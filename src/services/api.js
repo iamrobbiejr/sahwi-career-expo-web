@@ -351,3 +351,9 @@ export const adminUserService = {
     toggleUserSuspension: (userId) => apiClient.patch(`/admin/users/${userId}/suspend`),
     deleteUser: (userId) => apiClient.delete(`/admin/users/${userId}`),
 };
+
+export const rolesService = {
+    getRoles: () => apiClient.get('/admin/roles'),
+    getPermissions: () => apiClient.get('/admin/permissions'),
+    updateRolePermissions: (role, permissions) => apiClient.post(`/admin/roles/${role}/permissions`, {permissions}),
+};

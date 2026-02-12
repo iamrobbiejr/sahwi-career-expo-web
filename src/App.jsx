@@ -45,6 +45,7 @@ import AdminPaymentGatewayEdit from './pages/admin/payments/AdminPaymentGatewayE
 import AdminUserList from './pages/admin/users/AdminUserList';
 import AdminUserDetail from './pages/admin/users/AdminUserDetail';
 import AdminPendingVerifications from './pages/admin/users/AdminPendingVerifications';
+import AdminRolesPage from './pages/admin/roles/AdminRolesPage';
 import AdminArticleList from './pages/admin/articles/AdminArticleList';
 import AdminArticleCreate from './pages/admin/articles/AdminArticleCreate';
 import AdminArticleEdit from './pages/admin/articles/AdminArticleEdit';
@@ -356,6 +357,14 @@ function App() {
                             element={
                                 <ProtectedRoute requiredRole="admin">
                                     <AdminUserDetail/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="admin/roles"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminRolesPage/>
                                 </ProtectedRoute>
                             }
                         />

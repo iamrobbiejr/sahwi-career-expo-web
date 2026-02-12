@@ -13,6 +13,7 @@ import {
     MessageCircle,
     PieChart,
     Send,
+    Shield,
     Ticket,
     TrendingUp,
     Users,
@@ -79,6 +80,7 @@ const Sidebar = () => {
             label: 'IAM',
             children: [
                 {icon: Users, label: 'All Users', path: '/admin/users'},
+                {icon: Shield, label: 'Roles & Permissions', path: '/admin/roles'},
                 {icon: Award, label: 'Verifications', path: '/admin/users/pending-verifications'},
             ]
         },
