@@ -2,10 +2,12 @@ import React, {useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {eventsService} from '../services/api';
 import {formatImageUrl} from '../utils/format';
-import {Calendar, MapPin, Search, ArrowRight, Loader2} from 'lucide-react';
+import {ArrowRight, Calendar, Loader2, MapPin, Search} from 'lucide-react';
 import {Link} from 'react-router-dom';
 
 const EventsPage = () => {
+
+
     const [params, setParams] = useState({
         page: 1,
         search: '',
@@ -68,10 +70,10 @@ const EventsPage = () => {
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute top-4 left-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm
+                                    <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm
                     ${event.is_paid ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
-                    {event.is_paid ? 'Paid' : 'Free'}
-                  </span>
+                                        {event.is_paid ? 'Paid' : 'Free'}
+                                    </span>
                                 </div>
                             </div>
 
@@ -100,13 +102,15 @@ const EventsPage = () => {
                                 </p>
 
                                 <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                  <span className="text-primary-600 font-bold">
-                    {event.is_paid ? `$${event.price_cents / 100}` : 'Register Free'}
-                  </span>
-                                    <div
-                                        className="flex items-center text-sm font-semibold text-gray-900 group-hover:translate-x-1 transition-transform">
-                                        View Details
-                                        <ArrowRight className="w-4 h-4 ml-1"/>
+                                    <span className="text-primary-600 font-bold">
+                                        {event.is_paid ? `$${event.price_cents / 100}` : 'Register Free'}
+                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <div
+                                            className="flex items-center text-sm font-semibold text-gray-900 group-hover:translate-x-1 transition-transform">
+                                            View Details
+                                            <ArrowRight className="w-4 h-4 ml-1"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

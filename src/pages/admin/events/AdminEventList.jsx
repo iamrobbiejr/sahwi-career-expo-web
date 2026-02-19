@@ -2,19 +2,11 @@ import React, {useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {eventsService} from '../../../services/api';
 import {formatImageUrl} from '../../../utils/format';
-import {
-    Plus,
-    Search,
-    ChevronLeft,
-    ChevronRight,
-    Calendar,
-    MapPin,
-    Eye,
-    Edit2,
-    Trash2
-} from 'lucide-react';
+import {Calendar, ChevronLeft, ChevronRight, Edit2, Eye, MapPin, Plus, Search, Trash2, Users} from 'lucide-react';
 import {Link} from 'react-router-dom';
 import {toast} from 'react-hot-toast';
+import {useAuthStore} from "../../../store/index.js";
+
 
 const AdminEventList = () => {
     const [params, setParams] = useState({
@@ -23,6 +15,9 @@ const AdminEventList = () => {
         status: '',
         per_page: 10
     });
+    const {hasRole} = useAuthStore();
+
+
 
     const {data, isLoading, isError, refetch} = useQuery({
         queryKey: ['adminEvents', params],
@@ -51,6 +46,8 @@ const AdminEventList = () => {
 
     const events = data?.data?.data || [];
     const pagination = data?.data?.pagination || {};
+
+    const isAdmin = hasRole('admin');
 
     return (
         <div className="space-y-6">
@@ -173,6 +170,19 @@ const AdminEventList = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
+                                            {isAdmin && (
+                                                <Link
+                                                    to={`/admin/events/${event.id}/registrations`}
+                                                    onClick={e => e.stopPropagation()}
+                                                    className="flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-lg transition-all"
+                                                    style={{backgroundColor: 'var(--color-navy-deep)', color: '#fff'}}
+                                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-navy-mid)'}
+                                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--color-navy-deep)'}
+                                                >
+                                                    <Users className="w-3.5 h-3.5"/>
+                                                    Registrations
+                                                </Link>
+                                            )}
                                             <Link
                                                 to={`/admin/events/${event.id}`}
                                                 className="p-1 text-gray-400 hover:text-primary-600 transition-colors"

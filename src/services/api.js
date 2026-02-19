@@ -357,3 +357,10 @@ export const rolesService = {
     getPermissions: () => apiClient.get('/admin/permissions'),
     updateRolePermissions: (role, permissions) => apiClient.post(`/admin/roles/${role}/permissions`, {permissions}),
 };
+
+export const auditService = {
+    getAll: (params) => apiClient.get('/admin/audits', {params}),
+    getById: (id) => apiClient.get(`/admin/audits/${id}`),
+    getStats: () => apiClient.get('/admin/audits/stats'),
+    getModelTypes: () => apiClient.get('/admin/audits/model-types'),
+};

@@ -8,6 +8,7 @@ import {
     Calendar,
     ChevronDown,
     ChevronRight,
+    ClipboardList,
     CreditCard,
     Home,
     MessageCircle,
@@ -67,7 +68,7 @@ const Sidebar = () => {
     const adminLinks = [
         {icon: Home, label: 'Dashboard', path: '/'},
         {icon: Calendar, label: 'Event Management', path: '/admin/events'},
-        {icon: Ticket, label: 'All Registrations', path: '/my-registrations'},
+        {icon: Ticket, label: 'My Registrations', path: '/my-registrations'},
         {icon: Video, label: 'Virtual Meetings', path: '/admin/meetings'},
         {icon: Send, label: 'Email Broadcasts', path: '/admin/broadcasts'},
         {icon: CreditCard, label: 'Payment Gateways', path: '/admin/payments/gateways'},
@@ -91,6 +92,7 @@ const Sidebar = () => {
                 {icon: AlertCircle, label: 'Pending & Cancelled', path: '/admin/reports/pending-cancelled'},
             ]
         },
+        {icon: ClipboardList, label: 'Audit Trail', path: '/admin/audit'},
     ];
 
     const publicLinks = [

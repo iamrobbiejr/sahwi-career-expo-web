@@ -34,6 +34,7 @@ import AdminEventList from './pages/admin/events/AdminEventList';
 import AdminEventCreate from './pages/admin/events/AdminEventCreate';
 import AdminEventEdit from './pages/admin/events/AdminEventEdit';
 import AdminEventDetail from './pages/admin/events/AdminEventDetail';
+import AdminEventRegistrationsPage from './pages/admin/events/AdminEventRegistrationsPage';
 import AdminMeetingList from './pages/admin/meetings/AdminMeetingList';
 import AdminBroadcastList from './pages/admin/broadcasts/AdminBroadcastList';
 import AdminBroadcastCreate from './pages/admin/broadcasts/AdminBroadcastCreate';
@@ -52,6 +53,8 @@ import AdminArticleEdit from './pages/admin/articles/AdminArticleEdit';
 import AdminFinancialReport from './pages/admin/reports/AdminFinancialReport';
 import AdminPaymentsSummaryReport from './pages/admin/reports/AdminPaymentsSummaryReport';
 import AdminPendingCancelledReport from './pages/admin/reports/AdminPendingCancelledReport';
+import AdminAuditList from './pages/admin/audit/AdminAuditList';
+import AdminAuditDetail from './pages/admin/audit/AdminAuditDetail';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -265,6 +268,14 @@ function App() {
                             }
                         />
                         <Route
+                            path="admin/events/:id/registrations"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminEventRegistrationsPage/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
                             path="admin/events/:id/edit"
                             element={
                                 <ProtectedRoute requiredRole="admin">
@@ -415,6 +426,24 @@ function App() {
                             element={
                                 <ProtectedRoute requiredRole="admin">
                                     <AdminPendingCancelledReport/>
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        {/* Audit Routes */}
+                        <Route
+                            path="admin/audit"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminAuditList/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="admin/audit/:id"
+                            element={
+                                <ProtectedRoute requiredRole="admin">
+                                    <AdminAuditDetail/>
                                 </ProtectedRoute>
                             }
                         />
