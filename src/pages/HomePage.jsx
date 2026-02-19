@@ -82,25 +82,29 @@ const HomePage = () => {
             icon: Calendar,
             label: 'Events Registered',
             value: userStats.events_registered_count || 0,
-            color: 'bg-primary-500'
+            iconBg: 'var(--color-navy-deep)',
+            iconColor: '#fff',
         },
         {
             icon: Users,
             label: 'Forum Posts',
             value: userStats.forum_posts_count || 0,
-            color: 'bg-secondary-500'
+            iconBg: 'var(--color-gold)',
+            iconColor: 'var(--color-navy-deep)',
         },
         {
             icon: MessageCircle,
             label: 'Messages',
             value: userStats.unread_messages_count || 0,
-            color: 'bg-accent-500'
+            iconBg: 'var(--color-navy-mid)',
+            iconColor: '#fff',
         },
         {
             icon: Award,
             label: 'Reputation Points',
             value: userStats.reputation_points || 0,
-            color: 'bg-purple-500'
+            iconBg: 'var(--color-gold-dark)',
+            iconColor: '#fff',
         },
     ];
 
@@ -113,13 +117,15 @@ const HomePage = () => {
         >
             {/* Welcome, Header */}
             <motion.div variants={itemVariants}
-                        className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-2xl p-8 text-black shadow-lg">
+                        className="rounded-2xl p-8 shadow-lg"
+                        style={{background: 'linear-gradient(135deg, var(--color-navy-deep) 0%, var(--color-navy-mid) 60%, var(--color-navy-light) 100%)'}}>
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold mb-2 text-white">
+                        <h1 className="text-3xl font-bold mb-2"
+                            style={{color: '#FFFFFF', fontFamily: 'var(--font-display, Playfair Display, serif)'}}>
                             {isAuthenticated ? `Welcome back, ${user?.name || 'User'}! 👋` : 'Empowering Careers in Fintech & APIs'}
                         </h1>
-                        <p className="text-primary-100 text-lg">
+                        <p className="text-lg" style={{color: 'rgba(255,255,255,0.72)'}}>
                             {isAuthenticated
                                 ? "Here's what's happening in your professional community today"
                                 : "Join a community of professionals and students to learn, connect, and grow."}
@@ -127,11 +133,13 @@ const HomePage = () => {
                         {!isAuthenticated && (
                             <div className="mt-6 flex space-x-4">
                                 <Link to="/register"
-                                      className="bg-white text-primary-600 px-6 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                      className="px-6 py-2.5 rounded-lg font-bold transition-all shadow-sm"
+                                      style={{backgroundColor: 'var(--color-gold)', color: 'var(--color-navy-deep)'}}>
                                     Get Started
                                 </Link>
                                 <Link to="/login"
-                                      className="bg-transparent border-2 border-white text-white px-6 py-2 rounded-lg font-bold hover:bg-white hover:text-primary-600 transition-colors">
+                                      className="bg-transparent border-2 text-white px-6 py-2 rounded-lg font-bold transition-colors"
+                                      style={{borderColor: 'rgba(255,255,255,0.4)'}}>
                                     Sign In
                                 </Link>
                             </div>
@@ -159,16 +167,21 @@ const HomePage = () => {
                         return (
                             <motion.div
                                 key={stat.label}
-                                whileHover={{scale: 1.05}}
-                                className="card p-6"
+                                whileHover={{scale: 1.03}}
+                                className="bg-white rounded-xl overflow-hidden transition-shadow p-6"
+                                style={{
+                                    borderTop: '3px solid var(--color-gold)',
+                                    boxShadow: '0 4px 12px rgba(13,27,94,0.08)'
+                                }}
                             >
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-gray-600 text-sm mb-1">{stat.label}</p>
-                                        <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                                        <p className="text-gray-500 text-sm mb-1">{stat.label}</p>
+                                        <p className="text-3xl font-bold"
+                                           style={{color: 'var(--color-navy-deep)'}}>{stat.value}</p>
                                     </div>
-                                    <div className={`${stat.color} p-3 rounded-lg`}>
-                                        <Icon className="w-6 h-6 text-white"/>
+                                    <div className="p-3 rounded-xl" style={{backgroundColor: stat.iconBg}}>
+                                        <Icon className="w-6 h-6" style={{color: stat.iconColor}}/>
                                     </div>
                                 </div>
                             </motion.div>
@@ -184,12 +197,14 @@ const HomePage = () => {
                     {/* Upcoming Events */}
                     <motion.div variants={itemVariants}>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                                <Calendar className="w-6 h-6 mr-2 text-primary-600"/>
+                            <h2 className="text-2xl font-bold flex items-center"
+                                style={{color: 'var(--color-navy-deep)'}}>
+                                <Calendar className="w-6 h-6 mr-2" style={{color: 'var(--color-gold-dark)'}}/>
                                 Upcoming Events
                             </h2>
                             <Link to="/events"
-                                  className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                                  className="font-medium text-sm flex items-center transition-colors"
+                                  style={{color: 'var(--color-gold-dark)'}}>
                                 View All <ArrowRight className="w-4 h-4 ml-1"/>
                             </Link>
                         </div>
@@ -229,13 +244,15 @@ const HomePage = () => {
                                                             }`}>
                                                             {(event.location_type === 'virtual' || event.venue?.toLowerCase() === 'virtual' || event.venue?.toLowerCase() === 'online') ? 'Virtual' : 'In-Person'}
                                                         </span>
-                                                        <h3 className="text-xl font-bold text-gray-900">{event.name}</h3>
+                                                        <h3 className="text-xl font-bold"
+                                                            style={{color: 'var(--color-navy-deep)'}}>{event.name}</h3>
                                                     </div>
                                                 </div>
                                                 <div
                                                     className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
                                                     <span className="flex items-center">
-                                                        <Clock className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        <Clock className="w-4 h-4 mr-1"
+                                                               style={{color: 'var(--color-gold-dark)'}}/>
                                                         {new Date(event.start_date).toLocaleDateString(undefined, {
                                                             month: 'short',
                                                             day: 'numeric',
@@ -243,11 +260,13 @@ const HomePage = () => {
                                                         })}
                                                     </span>
                                                     <span className="flex items-center">
-                                                        <MapPin className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        <MapPin className="w-4 h-4 mr-1"
+                                                                style={{color: 'var(--color-gold-dark)'}}/>
                                                         {event.venue}{event.location ? `, ${event.location}` : ''}
                                                     </span>
                                                     <span className="flex items-center">
-                                                        <Users className="w-4 h-4 mr-1 text-primary-500"/>
+                                                        <Users className="w-4 h-4 mr-1"
+                                                               style={{color: 'var(--color-gold-dark)'}}/>
                                                         {event.registrations || 0} registered
                                                     </span>
                                                 </div>
@@ -255,11 +274,11 @@ const HomePage = () => {
                                                     <Link to={`/events/${event.id}`} className="btn-primary">
                                                         View Details
                                                     </Link>
-                                                    {isAuthenticated && (
-                                                        <button className="btn-outline">
-                                                            Add to Calendar
-                                                        </button>
-                                                    )}
+                                                    {/*{isAuthenticated && (*/}
+                                                    {/*    <button className="btn-outline">*/}
+                                                    {/*        Add to Calendar*/}
+                                                    {/*    </button>*/}
+                                                    {/*)}*/}
                                                 </div>
                                             </div>
                                         </div>
@@ -272,12 +291,14 @@ const HomePage = () => {
                     {/* Recent Articles */}
                     <motion.div variants={itemVariants}>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                                <BookOpen className="w-6 h-6 mr-2 text-primary-600"/>
+                            <h2 className="text-2xl font-bold flex items-center"
+                                style={{color: 'var(--color-navy-deep)'}}>
+                                <BookOpen className="w-6 h-6 mr-2" style={{color: 'var(--color-gold-dark)'}}/>
                                 Trending Articles
                             </h2>
                             <Link to="/articles"
-                                  className="text-primary-600 hover:text-primary-700 font-medium text-sm flex items-center">
+                                  className="font-medium text-sm flex items-center transition-colors"
+                                  style={{color: 'var(--color-gold-dark)'}}>
                                 View All <ArrowRight className="w-4 h-4 ml-1"/>
                             </Link>
                         </div>
@@ -309,17 +330,20 @@ const HomePage = () => {
                                                 />
                                             </div>
                                             <div className="p-4">
-                                                <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                                                <h3 className="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors"
+                                                    style={{color: 'var(--color-navy-deep)'}}>
                                                     {article.title}
                                                 </h3>
                                                 <div
                                                     className="flex items-center justify-between text-sm text-gray-600">
                                                     <span className="flex items-center">
-                                                        <User className="w-3.5 h-3.5 mr-1 text-primary-500"/>
+                                                        <User className="w-3.5 h-3.5 mr-1"
+                                                              style={{color: 'var(--color-gold-dark)'}}/>
                                                         {article.author?.name || 'Anonymous'}
                                                     </span>
                                                     <span className="flex items-center">
-                                                        <Clock className="w-3.5 h-3.5 mr-1 text-primary-500"/>
+                                                        <Clock className="w-3.5 h-3.5 mr-1"
+                                                               style={{color: 'var(--color-gold-dark)'}}/>
                                                         {new Date(article.published_at || article.created_at).toLocaleDateString()}
                                                     </span>
                                                 </div>
@@ -337,22 +361,26 @@ const HomePage = () => {
                     {/* Trending Discussions */}
                     <motion.div variants={itemVariants}>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-bold text-gray-900 flex items-center">
-                                <TrendingUp className="w-5 h-5 mr-2 text-secondary-500"/>
+                            <h2 className="text-xl font-bold flex items-center"
+                                style={{color: 'var(--color-navy-deep)'}}>
+                                <TrendingUp className="w-5 h-5 mr-2" style={{color: 'var(--color-gold)'}}/>
                                 Hot Discussions
                             </h2>
                         </div>
                         <div className="space-y-3">
                             {isLoadingDiscussions ? (
                                 <div className="flex items-center justify-center py-8">
-                                    <Loader2 className="w-6 h-6 text-secondary-500 animate-spin"/>
+                                    <Loader2 className="w-6 h-6 animate-spin" style={{color: 'var(--color-gold)'}}/>
                                 </div>
                             ) : hotDiscussions && hotDiscussions.length > 0 ? (
                                 hotDiscussions.map((discussion) => (
                                     <Link
                                         key={discussion.id}
                                         to={isAuthenticated ? `/forums/${discussion?.forum?.id}/posts/${discussion.id}` : '/login'}
-                                        className="block p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-300 hover:shadow-md transition-all"
+                                        className="block p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all"
+                                        style={{borderColor: '#E5E7EB'}}
+                                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--color-gold-pale)'}
+                                        onMouseLeave={e => e.currentTarget.style.borderColor = '#E5E7EB'}
                                     >
                                         <div className="flex items-start justify-between mb-2">
                                             <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 flex-1">
@@ -370,7 +398,8 @@ const HomePage = () => {
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-2">
-                                            <span className="text-xs text-primary-600 font-medium">
+                                            <span className="text-xs font-medium"
+                                                  style={{color: 'var(--color-gold-dark)'}}>
                                                 #{discussion.category || 'General'}
                                             </span>
                                             <span className="text-xs text-gray-500">
@@ -389,54 +418,79 @@ const HomePage = () => {
                         </div>
                         <Link
                             to="/forums"
-                            className="block mt-4 text-center py-2 text-primary-600 hover:text-primary-700 font-medium text-sm"
+                            className="block mt-4 text-center py-2 font-medium text-sm transition-colors"
+                            style={{color: 'var(--color-gold-dark)'}}
                         >
                             View All Discussions →
                         </Link>
                     </motion.div>
 
 
-                    {/* Connection Suggestions */}
-                    <motion.div variants={itemVariants}
-                                className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-xl p-6">
-                        <h3 className="font-bold text-gray-900 mb-4 flex items-center">
-                            <Users className="w-5 h-5 mr-2 text-accent-600"/>
-                            Connect & Grow
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-4">
-                            Expand your network with professionals in your field
-                        </p>
-                        <Link to="/connect" className="btn-primary w-full">
-                            Find Connections
-                        </Link>
-                    </motion.div>
+                    {/*/!* Connection Suggestions *!/*/}
+                    {/*<motion.div variants={itemVariants}*/}
+                    {/*            className="bg-gradient-to-br from-accent-50 to-primary-50 rounded-xl p-6">*/}
+                    {/*    <h3 className="font-bold text-gray-900 mb-4 flex items-center">*/}
+                    {/*        <Users className="w-5 h-5 mr-2 text-accent-600"/>*/}
+                    {/*        Connect & Grow*/}
+                    {/*    </h3>*/}
+                    {/*    <p className="text-sm text-gray-600 mb-4">*/}
+                    {/*        Expand your network with professionals in your field*/}
+                    {/*    </p>*/}
+                    {/*    <Link to="/connect" className="btn-primary w-full">*/}
+                    {/*        Find Connections*/}
+                    {/*    </Link>*/}
+                    {/*</motion.div>*/}
 
                     {/* Quick Actions - Only for Auth Users */}
                     {isAuthenticated && (
-                        <motion.div variants={itemVariants} className="card p-6">
-                            <h3 className="font-bold text-gray-900 mb-4">Quick Actions</h3>
-                            <div className="space-y-3">
-                                <Link
-                                    to="/forums"
-                                    className="flex items-center justify-between p-3 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors"
-                                >
-                                    <span className="font-medium text-primary-700">Create Forum Post</span>
-                                    <ArrowRight className="w-5 h-5 text-primary-600"/>
-                                </Link>
-                                <Link
-                                    to="/events"
-                                    className="flex items-center justify-between p-3 bg-secondary-50 hover:bg-secondary-100 rounded-lg transition-colors"
-                                >
-                                    <span className="font-medium text-secondary-700">Browse Events</span>
-                                    <ArrowRight className="w-5 h-5 text-secondary-600"/>
-                                </Link>
-                                <Link
-                                    to="/messages"
-                                    className="flex items-center justify-between p-3 bg-accent-50 hover:bg-accent-100 rounded-lg transition-colors"
-                                >
-                                    <span className="font-medium text-accent-700">Send Message</span>
-                                    <ArrowRight className="w-5 h-5 text-accent-600"/>
-                                </Link>
+                        <motion.div variants={itemVariants}
+                                    className="rounded-xl overflow-hidden"
+                                    style={{
+                                        background: 'linear-gradient(135deg, var(--color-navy-deep) 0%, var(--color-navy-light) 100%)',
+                                        boxShadow: '0 4px 20px rgba(13,27,94,0.15)'
+                                    }}
+                        >
+                            <div className="p-5">
+                                <h3 className="font-bold mb-4 text-sm uppercase tracking-wider"
+                                    style={{color: 'var(--color-gold)'}}>Quick Actions</h3>
+                                <div className="space-y-2">
+                                    <Link
+                                        to="/forums"
+                                        className="flex items-center justify-between p-3 rounded-lg transition-all"
+                                        style={{
+                                            backgroundColor: 'rgba(255,255,255,0.08)',
+                                            color: 'rgba(255,255,255,0.85)'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.14)'}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
+                                    >
+                                        <span className="font-medium text-sm">Create Forum Post</span>
+                                        <ArrowRight className="w-4 h-4" style={{color: 'var(--color-gold)'}}/>
+                                    </Link>
+                                    <Link
+                                        to="/events"
+                                        className="flex items-center justify-between p-3 rounded-lg transition-all"
+                                        style={{
+                                            backgroundColor: 'rgba(255,255,255,0.08)',
+                                            color: 'rgba(255,255,255,0.85)'
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.14)'}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
+                                    >
+                                        <span className="font-medium text-sm">Browse Events</span>
+                                        <ArrowRight className="w-4 h-4" style={{color: 'var(--color-gold)'}}/>
+                                    </Link>
+                                    <Link
+                                        to="/messages"
+                                        className="flex items-center justify-between p-3 rounded-lg transition-all"
+                                        style={{backgroundColor: 'var(--color-gold)', color: 'var(--color-navy-deep)'}}
+                                        onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-gold-dark)'}
+                                        onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--color-gold)'}
+                                    >
+                                        <span className="font-bold text-sm">Send Message</span>
+                                        <ArrowRight className="w-4 h-4"/>
+                                    </Link>
+                                </div>
                             </div>
                         </motion.div>
                     )}

@@ -25,6 +25,24 @@ import Autocomplete from '../components/common/Autocomplete';
 import {INTERESTED_AREAS, INTERESTED_COURSES} from '../utils/registrationConstants';
 import bgImage from '../assets/bg.jpg';
 
+/* ─────────────────────────────────────────────────────────────────────────────
+   IconInput  –  flex wrapper so the icon never overlaps the text
+   ───────────────────────────────────────────────────────────────────────────── */
+const IconInput = ({icon: Icon, children}) => (
+    <div className="flex items-center w-full border border-gray-300 rounded-lg bg-white
+                    transition-shadow overflow-hidden">
+        <span className="pl-3 pr-2 flex-shrink-0" style={{color: 'var(--color-gold-dark)'}}>
+            <Icon className="h-5 w-5"/>
+        </span>
+        {children}
+    </div>
+);
+
+/* shared classes for every bare input / select inside IconInput */
+const fieldCls =
+    "flex-1 min-w-0 py-2 pr-3 bg-transparent text-sm text-gray-900 " +
+    "placeholder-gray-400 outline-none border-none focus:ring-0";
+
 const RegisterPage = () => {
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
@@ -48,19 +66,15 @@ const RegisterPage = () => {
         whatsapp_number: '',
         avatar: null,
         bio: '',
-        // Student fields
         current_school_name: '',
         current_grade: '',
         interested_area: '',
         interested_course: '',
         interested_university_id: '',
-        // Professional fields
         expert_field: '',
-        // Company/University fields
         organization_name: '',
         role_at_organization: '',
         organisation_id: '',
-        // Verification Docs
         verification_docs: [],
         professional_verification_docs: [],
     });
@@ -82,13 +96,11 @@ const RegisterPage = () => {
             const delayDebounceFn = setTimeout(async () => {
                 try {
                     const response = await organizationsService.search(formData.organization_name);
-                    // Assuming response.data is an array of organization objects with a 'name' property
                     setOrganizations(response.data.map(org => org.name));
                 } catch (err) {
                     console.error('Failed to fetch organizations:', err);
                 }
             }, 500);
-
             return () => clearTimeout(delayDebounceFn);
         } else {
             setOrganizations([]);
@@ -110,7 +122,6 @@ const RegisterPage = () => {
             description: 'Promoting academic programs',
             icon: FiGlobe
         },
-        // { id: 'single', label: 'Individual', description: 'General community member', icon: FiUser },
     ];
 
     const handleInputChange = (e) => {
@@ -135,15 +146,11 @@ const RegisterPage = () => {
     const handleFileUpload = async (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
-
         setIsUploading(true);
         setUploadError(null);
-
         try {
             const response = await fileService.uploadVerificationDocs(files);
             const uploadedUrls = response.data.urls;
-            // if a role is professional, append to professional_verification_docs, else to verification_docs
-
             if (formData.role === 'professional') {
                 setFormData((prev) => ({
                     ...prev,
@@ -155,7 +162,6 @@ const RegisterPage = () => {
                     verification_docs: [...prev.verification_docs, ...uploadedUrls],
                 }));
             }
-
         } catch (err) {
             console.error('Upload failed:', err);
             setUploadError('Failed to upload files. Please try again.');
@@ -174,20 +180,13 @@ const RegisterPage = () => {
     const handleAvatarUpload = (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        // Check file size (e.g., 2MB)
         if (file.size > 2 * 1024 * 1024) {
             toast.error('Image size should be less than 2MB');
             return;
         }
-
         setFormData((prev) => ({...prev, avatar: file}));
-
-        // Create preview
         const reader = new FileReader();
-        reader.onloadend = () => {
-            setAvatarPreview(reader.result);
-        };
+        reader.onloadend = () => setAvatarPreview(reader.result);
         reader.readAsDataURL(file);
     };
 
@@ -196,7 +195,6 @@ const RegisterPage = () => {
         setError(null);
         setIsLoading(true);
 
-        // Validate that docs are uploaded for specific roles
         const rolesRequiringDocs = ['professional', 'company_rep', 'university'];
         if (rolesRequiringDocs.includes(formData.role) &&
             formData.verification_docs.length === 0 &&
@@ -208,43 +206,22 @@ const RegisterPage = () => {
 
         try {
             const submitData = new FormData();
-            // ✅ FIX: Single loop with proper handling
             Object.keys(formData).forEach(key => {
                 const value = formData[key];
-
-                // Skip null/undefined values
-                if (value === null || value === undefined) {
-                    return;
-                }
-
-                // Handle verification_docs array
+                if (value === null || value === undefined) return;
                 if (key === 'verification_docs' && Array.isArray(value)) {
-                    value.forEach(doc => {
-                        submitData.append('verification_docs[]', doc);
-                    });
-                }
-                // Handle professional_verification_docs array
-                else if (key === 'professional_verification_docs' && Array.isArray(value)) {
-                    value.forEach(doc => {
-                        submitData.append('professional_verification_docs[]', doc);
-                    });
-                }
-                // Handle all other fields
-                else if (key !== 'verification_docs' && key !== 'professional_verification_docs') {
+                    value.forEach(doc => submitData.append('verification_docs[]', doc));
+                } else if (key === 'professional_verification_docs' && Array.isArray(value)) {
+                    value.forEach(doc => submitData.append('professional_verification_docs[]', doc));
+                } else if (key !== 'verification_docs' && key !== 'professional_verification_docs') {
                     submitData.append(key, value);
                 }
             });
 
             const response = await authService.register(submitData);
-
             const successMessage = response.data.message || 'Registration successful. Please check your email.';
-            toast.success(successMessage, {
-                duration: 4000,
-            });
-
-            setTimeout(() => {
-                navigate('/login');
-            }, 2000);
+            toast.success(successMessage, {duration: 4000});
+            setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
             console.error('Registration failed:', err);
             const errorMessage = err.response?.data?.message || 'Registration failed. Please check your inputs.';
@@ -254,7 +231,6 @@ const RegisterPage = () => {
             setIsLoading(false);
         }
     };
-
 
     return (
         <div
@@ -266,12 +242,13 @@ const RegisterPage = () => {
                 className={`bg-white rounded-2xl shadow-2xl p-8 w-full ${step === 1 ? 'max-w-2xl' : 'max-w-4xl'}`}
             >
                 <div className="text-center mb-8">
-                    <div
-                        className="w-16 h-16 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                        <FiUserPlus className="text-white text-3xl"/>
+                    <div className="w-16 h-16 rounded-xl mx-auto mb-4 flex items-center justify-center"
+                         style={{background: 'linear-gradient(135deg, var(--color-navy-deep) 0%, var(--color-navy-mid) 100%)'}}>
+                        <FiUserPlus className="text-3xl" style={{color: 'var(--color-gold)'}}/>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-                    <p className="text-gray-600">Join the EduGate community</p>
+                    <h1 className="text-3xl font-bold mb-2" style={{color: 'var(--color-navy-deep)'}}>Create
+                        Account</h1>
+                    <p className="text-gray-500">Join the Sahwira Careers Expo community</p>
                 </div>
 
                 <AnimatePresence mode="wait">
@@ -288,16 +265,27 @@ const RegisterPage = () => {
                                     <button
                                         key={role.id}
                                         onClick={() => handleRoleSelect(role.id)}
-                                        className="p-4 border-2 border-gray-100 rounded-xl text-left hover:border-primary-500 hover:bg-primary-50 transition-all group"
+                                        className="p-4 border-2 border-gray-100 rounded-xl text-left transition-all group"
+                                        onMouseEnter={e => {
+                                            e.currentTarget.style.borderColor = 'var(--color-gold)';
+                                            e.currentTarget.style.backgroundColor = 'var(--color-secondary-50)';
+                                        }}
+                                        onMouseLeave={e => {
+                                            e.currentTarget.style.borderColor = '#F3F4F6';
+                                            e.currentTarget.style.backgroundColor = '';
+                                        }}
                                     >
                                         <div className="flex items-start">
-                                            <div
-                                                className="p-2 bg-gray-50 rounded-lg group-hover:bg-primary-100 transition-colors mr-3">
-                                                <role.icon
-                                                    className="w-6 h-6 text-gray-400 group-hover:text-primary-600"/>
+                                            <div className="p-2 rounded-lg mr-3 transition-colors"
+                                                 style={{backgroundColor: '#F9FAFB'}}
+                                                 onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(200,160,100,0.12)'}
+                                                 onMouseLeave={e => e.currentTarget.style.backgroundColor = '#F9FAFB'}>
+                                                <role.icon className="w-6 h-6"
+                                                           style={{color: 'var(--color-gold-dark)'}}/>
                                             </div>
                                             <div>
-                                                <h3 className="font-bold text-gray-900 group-hover:text-primary-700">{role.label}</h3>
+                                                <h3 className="font-bold"
+                                                    style={{color: 'var(--color-navy-deep)'}}>{role.label}</h3>
                                                 <p className="text-sm text-gray-500">{role.description}</p>
                                             </div>
                                         </div>
@@ -314,31 +302,32 @@ const RegisterPage = () => {
                         >
                             <button
                                 onClick={() => setStep(1)}
-                                className="text-sm text-primary-600 mb-4 hover:underline flex items-center"
+                                className="text-sm mb-4 flex items-center font-medium transition-colors"
+                                style={{color: 'var(--color-gold-dark)'}}
                             >
                                 <FiChevronLeft className="mr-1"/> Back to role selection
                             </button>
 
                             <form onSubmit={handleSubmit}
-                                  className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {error && (
                                     <div
                                         className="md:col-span-2 lg:col-span-3 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm flex items-center">
-                                        <AlertCircle className="w-4 h-4 mr-2"/>
+                                        <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0"/>
                                         {error}
                                     </div>
                                 )}
 
+                                {/* Avatar Upload */}
                                 <div className="md:col-span-2 lg:col-span-3 flex justify-center mb-2">
                                     <div className="relative group">
                                         <div
                                             className="w-24 h-24 bg-gray-100 rounded-full overflow-hidden border-2 border-gray-200 flex items-center justify-center">
-                                            {avatarPreview ? (
-                                                <img src={avatarPreview} alt="Avatar"
-                                                     className="w-full h-full object-cover"/>
-                                            ) : (
-                                                <FiUser className="w-12 h-12 text-gray-400"/>
-                                            )}
+                                            {avatarPreview
+                                                ? <img src={avatarPreview} alt="Avatar"
+                                                       className="w-full h-full object-cover"/>
+                                                : <FiUser className="w-12 h-12 text-gray-400"/>
+                                            }
                                         </div>
                                         <label
                                             className="absolute bottom-0 right-0 bg-primary-600 p-2 rounded-full text-white cursor-pointer hover:bg-primary-700 transition-colors shadow-lg">
@@ -353,19 +342,16 @@ const RegisterPage = () => {
                                     </div>
                                 </div>
 
+                                {/* ── Title ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiUser className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiUser}>
                                         <select
                                             name="title"
                                             required
                                             value={formData.title}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                         >
                                             <option value="">Select Title</option>
                                             <option value="Mr">Mr</option>
@@ -374,320 +360,272 @@ const RegisterPage = () => {
                                             <option value="Dr">Dr</option>
                                             <option value="Prof">Prof</option>
                                         </select>
-                                    </div>
+                                    </IconInput>
                                 </div>
 
+                                {/* ── Full Name ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiUser className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiUser}>
                                         <input
                                             type="text"
                                             name="name"
                                             required
                                             value={formData.name}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                             placeholder="John Doe"
                                         />
-                                    </div>
+                                    </IconInput>
                                 </div>
 
+                                {/* ── Email ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Email
                                         Address</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiMail className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiMail}>
                                         <input
                                             type="email"
                                             name="email"
                                             required
                                             value={formData.email}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                             placeholder="john@example.com"
                                         />
-                                    </div>
+                                    </IconInput>
                                 </div>
 
+                                {/* ── Password ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiLock className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiLock}>
                                         <input
                                             type="password"
                                             name="password"
                                             required
                                             value={formData.password}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                             placeholder="••••••••"
                                         />
-                                    </div>
+                                    </IconInput>
                                 </div>
 
+                                {/* ── WhatsApp ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">WhatsApp
                                         Number</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiPhone className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiPhone}>
                                         <input
                                             type="tel"
                                             name="whatsapp_number"
                                             required
                                             value={formData.whatsapp_number}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                             placeholder="+1234567890"
                                         />
-                                    </div>
+                                    </IconInput>
                                 </div>
 
+                                {/* ── Date of Birth ── */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Date of
                                         Birth</label>
-                                    <div className="relative">
-                                        <div
-                                            className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FiCalendar className="h-5 w-5 text-gray-400"/>
-                                        </div>
+                                    <IconInput icon={FiCalendar}>
                                         <input
                                             type="date"
                                             name="dob"
                                             required
                                             value={formData.dob}
                                             onChange={handleInputChange}
-                                            className="input-field pl-10"
+                                            className={fieldCls}
                                         />
-                                    </div>
+                                    </IconInput>
                                 </div>
 
-                                {/* Role Specific Fields */}
-                                {formData.role === 'student' && (
-                                    <>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Current
-                                                School</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiBook className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    name="current_school_name"
-                                                    required
-                                                    value={formData.current_school_name}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                    placeholder="EduGate High School"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Current
-                                                Grade</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiAward className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    name="current_grade"
-                                                    required
-                                                    value={formData.current_grade}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                    placeholder="Grade 12"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Interested
-                                                University</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiMapPin className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <select
-                                                    name="interested_university_id"
-                                                    required
-                                                    value={formData.interested_university_id}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                >
-                                                    <option value="">Select a University</option>
-                                                    {universities.map((uni) => (
-                                                        <option key={uni.id} value={uni.id}>{uni.name}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Interested
-                                                Career Area</label>
-                                            <Autocomplete
-                                                name="interested_area"
+                                {/* ══ STUDENT FIELDS ══ */}
+                                {formData.role === 'student' && (<>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Current
+                                            School</label>
+                                        <IconInput icon={FiBook}>
+                                            <input
+                                                type="text"
+                                                name="current_school_name"
                                                 required
-                                                value={formData.interested_area}
+                                                value={formData.current_school_name}
                                                 onChange={handleInputChange}
-                                                options={INTERESTED_AREAS}
-                                                icon={FiBriefcase}
-                                                placeholder="e.g., Engineering, Business"
+                                                className={fieldCls}
+                                                placeholder="EduGate High School"
                                             />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Interested
-                                                Course</label>
-                                            <Autocomplete
-                                                name="interested_course"
+                                        </IconInput>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Current
+                                            Grade</label>
+                                        <IconInput icon={FiAward}>
+                                            <input
+                                                type="text"
+                                                name="current_grade"
                                                 required
-                                                value={formData.interested_course}
+                                                value={formData.current_grade}
                                                 onChange={handleInputChange}
-                                                options={INTERESTED_COURSES}
-                                                icon={FiBook}
-                                                placeholder="e.g., Computer Science"
+                                                className={fieldCls}
+                                                placeholder="Grade 12"
                                             />
-                                        </div>
-                                    </>
-                                )}
-
-                                {formData.role === 'professional' && (
-                                    <>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Field of
-                                                Expertise</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiBriefcase className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    name="expert_field"
-                                                    required
-                                                    value={formData.expert_field}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                    placeholder="e.g. Software Engineering"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="md:col-span-2 lg:col-span-3">
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                                            <textarea
-                                                name="bio"
+                                        </IconInput>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Interested
+                                            University</label>
+                                        <IconInput icon={FiMapPin}>
+                                            <select
+                                                name="interested_university_id"
                                                 required
-                                                value={formData.bio}
+                                                value={formData.interested_university_id}
                                                 onChange={handleInputChange}
-                                                className="input-field min-h-[100px] py-2"
-                                                placeholder="Tell us about your professional background..."
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                                className={fieldCls}
+                                            >
+                                                <option value="">Select a University</option>
+                                                {universities.map((uni) => (
+                                                    <option key={uni.id} value={uni.id}>{uni.name}</option>
+                                                ))}
+                                            </select>
+                                        </IconInput>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Interested
+                                            Career Area</label>
+                                        <Autocomplete
+                                            name="interested_area"
+                                            required
+                                            value={formData.interested_area}
+                                            onChange={handleInputChange}
+                                            options={INTERESTED_AREAS}
+                                            icon={FiBriefcase}
+                                            placeholder="e.g., Engineering, Business"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Interested
+                                            Course</label>
+                                        <Autocomplete
+                                            name="interested_course"
+                                            required
+                                            value={formData.interested_course}
+                                            onChange={handleInputChange}
+                                            options={INTERESTED_COURSES}
+                                            icon={FiBook}
+                                            placeholder="e.g., Computer Science"
+                                        />
+                                    </div>
+                                </>)}
 
-                                {formData.role === 'company_rep' && (
-                                    <>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Organization
-                                                Name</label>
-                                            <Autocomplete
-                                                name="organization_name"
+                                {/* ══ PROFESSIONAL FIELDS ══ */}
+                                {formData.role === 'professional' && (<>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Field of
+                                            Expertise</label>
+                                        <IconInput icon={FiBriefcase}>
+                                            <input
+                                                type="text"
+                                                name="expert_field"
                                                 required
-                                                value={formData.organization_name}
+                                                value={formData.expert_field}
                                                 onChange={handleInputChange}
-                                                options={organizations}
-                                                icon={FiBriefcase}
-                                                placeholder="Company Name"
+                                                className={fieldCls}
+                                                placeholder="e.g. Software Engineering"
                                             />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Your
-                                                Role</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiUser className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    name="role_at_organization"
-                                                    required
-                                                    value={formData.role_at_organization}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                    placeholder="e.g. HR Manager"
-                                                />
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                                        </IconInput>
+                                    </div>
+                                    <div className="md:col-span-2 lg:col-span-3">
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                                        <textarea
+                                            name="bio"
+                                            required
+                                            value={formData.bio}
+                                            onChange={handleInputChange}
+                                            className="w-full min-h-[100px] px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-shadow resize-y"
+                                            placeholder="Tell us about your professional background..."
+                                        />
+                                    </div>
+                                </>)}
 
-                                {formData.role === 'university' && (
-                                    <>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Select
-                                                University</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiGlobe className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <select
-                                                    name="organisation_id"
-                                                    required
-                                                    value={formData.organisation_id}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                >
-                                                    <option value="">Select a University</option>
-                                                    {universities.map((uni) => (
-                                                        <option key={uni.id} value={uni.id}>{uni.name}</option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Your
-                                                Role</label>
-                                            <div className="relative">
-                                                <div
-                                                    className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FiUser className="h-5 w-5 text-gray-400"/>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    name="role_at_organization"
-                                                    required
-                                                    value={formData.role_at_organization}
-                                                    onChange={handleInputChange}
-                                                    className="input-field pl-10"
-                                                    placeholder="e.g. Admissions Officer"
-                                                />
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
+                                {/* ══ COMPANY REP FIELDS ══ */}
+                                {formData.role === 'company_rep' && (<>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Organization
+                                            Name</label>
+                                        <Autocomplete
+                                            name="organization_name"
+                                            required
+                                            value={formData.organization_name}
+                                            onChange={handleInputChange}
+                                            options={organizations}
+                                            // icon={FiBriefcase}
+                                            placeholder="Company Name"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Your
+                                            Role</label>
+                                        <IconInput icon={FiUser}>
+                                            <input
+                                                type="text"
+                                                name="role_at_organization"
+                                                required
+                                                value={formData.role_at_organization}
+                                                onChange={handleInputChange}
+                                                className={fieldCls}
+                                                placeholder="e.g. HR Manager"
+                                            />
+                                        </IconInput>
+                                    </div>
+                                </>)}
 
-                                {/* Verification Documents Upload */}
+                                {/* ══ UNIVERSITY REP FIELDS ══ */}
+                                {formData.role === 'university' && (<>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Select
+                                            University</label>
+                                        <IconInput icon={FiGlobe}>
+                                            <select
+                                                name="organisation_id"
+                                                required
+                                                value={formData.organisation_id}
+                                                onChange={handleInputChange}
+                                                className={fieldCls}
+                                            >
+                                                <option value="">Select a University</option>
+                                                {universities.map((uni) => (
+                                                    <option key={uni.id} value={uni.id}>{uni.name}</option>
+                                                ))}
+                                            </select>
+                                        </IconInput>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Your
+                                            Role</label>
+                                        <IconInput icon={FiUser}>
+                                            <input
+                                                type="text"
+                                                name="role_at_organization"
+                                                required
+                                                value={formData.role_at_organization}
+                                                onChange={handleInputChange}
+                                                className={fieldCls}
+                                                placeholder="e.g. Admissions Officer"
+                                            />
+                                        </IconInput>
+                                    </div>
+                                </>)}
+
+                                {/* ══ VERIFICATION DOCS ══ */}
                                 {(formData.role === 'professional' || formData.role === 'company_rep' || formData.role === 'university') && (
-                                    <div className="pt-4 border-t border-gray-100">
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <div className="md:col-span-2 lg:col-span-3 pt-4 border-t border-gray-100">
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Verification Documents
                                             <span className="text-red-500 ml-1">*</span>
                                         </label>
@@ -695,18 +633,17 @@ const RegisterPage = () => {
                                             Please upload ID, business certificate, or professional accreditation (PDF,
                                             JPG, PNG).
                                         </p>
-
                                         <div className="space-y-3">
                                             <div className="flex items-center justify-center w-full">
                                                 <label
                                                     className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
                                                     <div
                                                         className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                        {isUploading ? (
+                                                        {isUploading
+                                                            ?
                                                             <Loader2 className="w-8 h-8 text-primary-500 animate-spin"/>
-                                                        ) : (
-                                                            <Upload className="w-8 h-8 text-gray-400 mb-2"/>
-                                                        )}
+                                                            : <Upload className="w-8 h-8 text-gray-400 mb-2"/>
+                                                        }
                                                         <p className="text-sm text-gray-500">
                                                             {isUploading ? 'Uploading...' : 'Click to upload files'}
                                                         </p>
@@ -729,7 +666,6 @@ const RegisterPage = () => {
                                                 </p>
                                             )}
 
-                                            {/* Uploaded Files List */}
                                             {formData.verification_docs.length > 0 && (
                                                 <div className="space-y-2">
                                                     {formData.verification_docs.map((url, index) => (
@@ -740,14 +676,11 @@ const RegisterPage = () => {
                                                                     className="w-4 h-4 text-green-500 mr-2 flex-shrink-0"/>
                                                                 <span
                                                                     className="text-xs text-green-700 truncate max-w-[200px]">
-                                  {url.split('/').pop()}
-                                </span>
+                                                                    {url.split('/').pop()}
+                                                                </span>
                                                             </div>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => removeDoc(url)}
-                                                                className="text-gray-400 hover:text-red-500 transition-colors"
-                                                            >
+                                                            <button type="button" onClick={() => removeDoc(url)}
+                                                                    className="text-gray-400 hover:text-red-500 transition-colors">
                                                                 <X className="w-4 h-4"/>
                                                             </button>
                                                         </div>
@@ -764,14 +697,11 @@ const RegisterPage = () => {
                                                                     className="w-4 h-4 text-green-500 mr-2 flex-shrink-0"/>
                                                                 <span
                                                                     className="text-xs text-green-700 truncate max-w-[200px]">
-                                  {url.split('/').pop()}
-                                </span>
+                                                                    {url.split('/').pop()}
+                                                                </span>
                                                             </div>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => removeDoc(url)}
-                                                                className="text-gray-400 hover:text-red-500 transition-colors"
-                                                            >
+                                                            <button type="button" onClick={() => removeDoc(url)}
+                                                                    className="text-gray-400 hover:text-red-500 transition-colors">
                                                                 <X className="w-4 h-4"/>
                                                             </button>
                                                         </div>
@@ -782,20 +712,21 @@ const RegisterPage = () => {
                                     </div>
                                 )}
 
-                                <button
-                                    type="submit"
-                                    disabled={isLoading || isUploading}
-                                    className="btn-primary w-full py-3 mt-4 flex items-center justify-center disabled:opacity-70"
-                                >
-                                    {isLoading ? (
-                                        <>
-                                            <Loader2 className="w-5 h-5 mr-2 animate-spin"/>
-                                            Creating Account...
-                                        </>
-                                    ) : (
-                                        'Create Account'
-                                    )}
-                                </button>
+                                {/* ── Submit ── */}
+                                <div className="md:col-span-2 lg:col-span-3 mt-2">
+                                    <button
+                                        type="submit"
+                                        disabled={isLoading || isUploading}
+                                        className="btn-primary w-full py-3 flex items-center justify-center disabled:opacity-70"
+                                    >
+                                        {isLoading ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 mr-2 animate-spin"/>
+                                                Creating Account...
+                                            </>
+                                        ) : 'Create Account'}
+                                    </button>
+                                </div>
                             </form>
                         </motion.div>
                     )}
@@ -803,7 +734,8 @@ const RegisterPage = () => {
 
                 <p className="text-center mt-6 text-sm text-gray-600">
                     Already have an account?{' '}
-                    <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+                    <Link to="/login" className="font-medium transition-colors"
+                          style={{color: 'var(--color-gold-dark)'}}>
                         Sign in
                     </Link>
                 </p>

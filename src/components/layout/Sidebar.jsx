@@ -42,7 +42,6 @@ const Sidebar = () => {
         {icon: Users, label: 'Forums', path: '/forums'},
         {icon: BookOpen, label: 'Articles', path: '/articles'},
         {icon: MessageCircle, label: 'Messages', path: '/messages'},
-        // {icon: Heart, label: 'Donations', path: '/donations'},
     ];
 
     const professionalLinks = [
@@ -67,7 +66,6 @@ const Sidebar = () => {
 
     const adminLinks = [
         {icon: Home, label: 'Dashboard', path: '/'},
-
         {icon: Calendar, label: 'Event Management', path: '/admin/events'},
         {icon: Ticket, label: 'All Registrations', path: '/my-registrations'},
         {icon: Video, label: 'Virtual Meetings', path: '/admin/meetings'},
@@ -109,13 +107,33 @@ const Sidebar = () => {
     };
 
     const links = getLinks();
-
     const isActive = (path) => location.pathname === path;
+
+    /* ── Style helpers ── */
+    const activeLinkStyle = {
+        backgroundColor: 'rgba(200,160,100,0.12)',
+        color: 'var(--color-navy-deep)',
+        borderLeft: '3px solid var(--color-gold)',
+        paddingLeft: '13px',
+    };
+    const inactiveLinkStyle = {
+        color: '#374151',
+        borderLeft: '3px solid transparent',
+        paddingLeft: '13px',
+    };
+    const activeIconStyle = {color: 'var(--color-gold-dark)'};
+    const inactiveIconStyle = {color: '#9CA3AF'};
 
     return (
         <aside
-            className="hidden lg:block w-64 bg-white border-r border-gray-200 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto">
-            <nav className="p-4 space-y-2">
+            className="hidden lg:flex flex-col w-64 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto"
+            style={{backgroundColor: '#FFFFFF', borderRight: '1px solid #E8E7E1'}}
+        >
+            {/* Brand stripe at top */}
+            <div className="h-1 w-full flex-shrink-0"
+                 style={{background: 'linear-gradient(90deg, var(--color-navy-deep), var(--color-navy-mid), var(--color-gold))'}}/>
+
+            <nav className="p-4 space-y-1 flex-1">
                 {links.map((link) => {
                     const Icon = link.icon;
 
@@ -127,34 +145,47 @@ const Sidebar = () => {
                             <div key={link.label}>
                                 <button
                                     onClick={() => toggleMenu(link.label)}
-                                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${isChildActive || isOpen
-                                        ? 'bg-primary-50 text-primary-700 font-medium'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                    }`}
+                                    className="w-full flex items-center justify-between py-2.5 rounded-lg transition-all duration-200 text-sm font-medium"
+                                    style={
+                                        isChildActive || isOpen
+                                            ? {
+                                                backgroundColor: 'rgba(200,160,100,0.10)',
+                                                color: 'var(--color-navy-deep)',
+                                                paddingLeft: '16px',
+                                                paddingRight: '12px'
+                                            }
+                                            : {color: '#374151', paddingLeft: '16px', paddingRight: '12px'}
+                                    }
                                 >
                                     <div className="flex items-center space-x-3">
                                         <Icon
-                                            className={`w-5 h-5 ${isChildActive || isOpen ? 'text-primary-600' : 'text-gray-500'}`}/>
+                                            className="w-4 h-4"
+                                            style={isChildActive || isOpen ? activeIconStyle : inactiveIconStyle}
+                                        />
                                         <span>{link.label}</span>
                                     </div>
-                                    {isOpen ? <ChevronDown size={16}/> : <ChevronRight size={16}/>}
+                                    {isOpen
+                                        ? <ChevronDown size={14}
+                                                       style={{color: isChildActive ? 'var(--color-gold-dark)' : '#9CA3AF'}}/>
+                                        : <ChevronRight size={14}
+                                                        style={{color: isChildActive ? 'var(--color-gold-dark)' : '#9CA3AF'}}/>
+                                    }
                                 </button>
 
                                 {isOpen && (
-                                    <div className="ml-4 mt-1 space-y-1">
+                                    <div className="ml-3 mt-1 space-y-0.5 pl-3"
+                                         style={{borderLeft: '2px solid var(--color-gold-pale)'}}>
                                         {link.children.map((child) => {
                                             const ChildIcon = child.icon;
                                             return (
                                                 <Link
                                                     key={child.path}
                                                     to={child.path}
-                                                    className={`flex items-center space-x-3 px-4 py-2 rounded-lg text-sm transition-all duration-200 ${isActive(child.path)
-                                                        ? 'bg-primary-50 text-primary-700 font-medium'
-                                                        : 'text-gray-600 hover:bg-gray-50'
-                                                    }`}
+                                                    className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-all duration-200"
+                                                    style={isActive(child.path) ? activeLinkStyle : inactiveLinkStyle}
                                                 >
-                                                    <ChildIcon size={16}
-                                                               className={`${isActive(child.path) ? 'text-primary-600' : 'text-gray-400'}`}/>
+                                                    <ChildIcon size={14}
+                                                               style={isActive(child.path) ? activeIconStyle : inactiveIconStyle}/>
                                                     <span>{child.label}</span>
                                                 </Link>
                                             );
@@ -169,12 +200,11 @@ const Sidebar = () => {
                         <Link
                             key={link.path}
                             to={link.path}
-                            className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${isActive(link.path)
-                                ? 'bg-primary-50 text-primary-700 font-medium'
-                                : 'text-gray-700 hover:bg-gray-100'
-                            }`}
+                            className="flex items-center space-x-3 py-2.5 rounded-lg transition-all duration-200 text-sm font-medium"
+                            style={isActive(link.path) ? activeLinkStyle : inactiveLinkStyle}
                         >
-                            <Icon className={`w-5 h-5 ${isActive(link.path) ? 'text-primary-600' : 'text-gray-500'}`}/>
+                            <Icon className="w-4 h-4"
+                                  style={isActive(link.path) ? activeIconStyle : inactiveIconStyle}/>
                             <span>{link.label}</span>
                         </Link>
                     );
@@ -183,42 +213,43 @@ const Sidebar = () => {
 
             {/* Quick Actions Widget */}
             {isAuthenticated && (
-                <div className="p-4 mt-6">
-                    <div className="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-lg p-4">
-                        <h3 className="font-semibold text-gray-900 mb-3 text-sm">Quick Actions</h3>
+                <div className="p-4 flex-shrink-0">
+                    <div
+                        className="rounded-xl p-4"
+                        style={{background: 'linear-gradient(135deg, var(--color-navy-deep) 0%, var(--color-navy-mid) 100%)'}}
+                    >
+                        <h3 className="font-semibold mb-3 text-sm" style={{color: 'var(--color-gold)'}}>Quick
+                            Actions</h3>
                         <div className="space-y-2">
-
                             <Can perform="events.create">
                                 <button
-                                    className="w-full bg-white text-secondary-600 text-sm font-medium py-2 px-3 rounded-lg hover:shadow-md transition-all">
+                                    className="w-full text-sm font-medium py-2 px-3 rounded-lg transition-all"
+                                    style={{
+                                        backgroundColor: 'var(--color-gold)',
+                                        color: 'var(--color-navy-deep)',
+                                    }}
+                                    onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-gold-dark)'}
+                                    onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--color-gold)'}
+                                >
                                     Create Event
                                 </button>
                             </Can>
 
-                            <Link to={'/messages'}
-                                  className="w-full bg-white text-accent-600 text-sm font-medium py-2 px-8 rounded-lg hover:shadow-md transition-all">
+                            <Link
+                                to={'/messages'}
+                                className="block w-full text-sm font-medium py-2 px-3 rounded-lg transition-all text-center"
+                                style={{
+                                    backgroundColor: 'rgba(255,255,255,0.12)',
+                                    color: 'rgba(255,255,255,0.85)',
+                                    border: '1px solid rgba(255,255,255,0.15)',
+                                }}
+                            >
                                 Start Message
                             </Link>
                         </div>
                     </div>
                 </div>
             )}
-
-            {/* Trending Topics */}
-            {/*<div className="p-4">*/}
-            {/*    <h3 className="font-semibold text-gray-900 mb-3 text-sm">Trending Topics</h3>*/}
-            {/*    <div className="space-y-2">*/}
-            {/*        {['#DataScience', '#CareerTips', '#AIinFinance', '#Networking'].map((tag) => (*/}
-            {/*            <Link*/}
-            {/*                key={tag}*/}
-            {/*                to={`/forums?tag=${tag.slice(1)}`}*/}
-            {/*                className="block text-sm text-primary-600 hover:text-primary-700 hover:underline"*/}
-            {/*            >*/}
-            {/*                {tag}*/}
-            {/*            </Link>*/}
-            {/*        ))}*/}
-            {/*    </div>*/}
-            {/*</div>*/}
         </aside>
     );
 };

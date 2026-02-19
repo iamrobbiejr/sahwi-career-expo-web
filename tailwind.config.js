@@ -7,45 +7,47 @@ export default {
     theme: {
         extend: {
             colors: {
+                // ── Sahwira Brand Palette ────────────────────────────────
+                // Navy family  (60% dominant — navbars, footers, hero)
+                navy: {
+                    DEFAULT: '#0D1B5E',   // Deep Navy  – primary brand
+                    mid: '#1A2B7A',   // Royal Navy – gradient midpoint, hover
+                    light: '#3C508C',   // Steel Navy – gradient end, icons
+                    50: '#EEF1FA',   // very pale tint for active states
+                    100: '#D6DCF4',   // light tint for backgrounds
+                },
+                // Gold family  (10% accent — CTAs, highlights, badges)
+                gold: {
+                    DEFAULT: '#C8A064',   // Expo Gold   – CTAs, badges
+                    dark: '#B48C50',   // Warm Amber  – hover / pressed
+                    pale: '#DCC8A0',   // Sand Tint   – card backgrounds
+                },
+                // Neutrals  (30% breathing space)
+                ivory: {
+                    DEFAULT: '#F5F4EF',   // Ivory White – page background
+                    dark: '#E8E7E1',   // slightly deeper for borders
+                },
+                // Keep standard semantic token aliases
                 primary: {
-                    50: '#eff6ff',
-                    100: '#dbeafe',
-                    200: '#bfdbfe',
-                    300: '#93c5fd',
-                    400: '#60a5fa',
-                    500: '#3b82f6',
-                    600: '#2563eb',
-                    700: '#1d4ed8',
-                    800: '#1e40af',
-                    900: '#1e3a8a',
+                    DEFAULT: '#0D1B5E',
+                    50: '#EEF1FA',
+                    100: '#D6DCF4',
+                    500: '#1A2B7A',
+                    600: '#0D1B5E',
+                    700: '#0A1548',
                 },
                 secondary: {
-                    50: '#fffbeb',
-                    100: '#fef3c7',
-                    200: '#fde68a',
-                    300: '#fcd34d',
-                    400: '#fbbf24',
-                    500: '#f59e0b',
-                    600: '#d97706',
-                    700: '#b45309',
-                    800: '#92400e',
-                    900: '#78350f',
-                },
-                accent: {
-                    50: '#f0fdf4',
-                    100: '#dcfce7',
-                    200: '#bbf7d0',
-                    300: '#86efac',
-                    400: '#4ade80',
-                    500: '#10b981',
-                    600: '#059669',
-                    700: '#047857',
-                    800: '#065f46',
-                    900: '#064e3b',
+                    DEFAULT: '#C8A064',
+                    50: '#FAF5EC',
+                    100: '#F0E3CA',
+                    500: '#C8A064',
+                    600: '#B48C50',
+                    700: '#9A7440',
                 },
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['DM Sans', 'Inter', 'system-ui', 'sans-serif'],
+                display: ['Playfair Display', 'Georgia', 'serif'],
             },
         },
     },

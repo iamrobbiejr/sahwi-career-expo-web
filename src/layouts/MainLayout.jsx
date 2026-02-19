@@ -8,7 +8,7 @@ const MainLayout = () => {
     const {user} = useAuthStore();
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen" style={{backgroundColor: 'var(--color-bg)'}}>
             <Header/>
             <div className="flex">
                 <Sidebar/>

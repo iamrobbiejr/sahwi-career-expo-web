@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {AnimatePresence, motion} from 'framer-motion';
 
 const Autocomplete = ({
@@ -57,7 +57,7 @@ const Autocomplete = ({
     return (
         <div className="relative" ref={wrapperRef}>
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                {Icon && <Icon className="h-5 w-5 text-gray-400"/>}
+                {Icon && <Icon className="h-5 w-5 text-gray-400 "/>}
             </div>
             <input
                 type="text"

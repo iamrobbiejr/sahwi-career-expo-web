@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGate – Brand Color Palette</title>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+            rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --navy-deep: #0D1B5E;
+            --navy-mid: #1A2B7A;
+            --navy-light: #3C508C;
+            --gold-primary: #C8A064;
+            --gold-warm: #B48C50;
+            --gold-pale: #DCC8A0;
+            --white: #FFFFFF;
+            --off-white: #F5F4EF;
+            --text-dark: #0D1B5E;
+            --text-body: #2C2C3A;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--off-white);
+            color: var(--text-body);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy-mid) 60%, var(--navy-light) 100%);
+            padding: 56px 40px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg,
+            transparent,
+            transparent 40px,
+            rgba(200, 160, 100, 0.04) 40px,
+            rgba(200, 160, 100, 0.04) 80px);
+        }
+
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            position: relative;
+        }
+
+        .page-header h1 span {
+            color: var(--gold-primary);
+        }
+
+        .page-header p {
+            color: rgba(255, 255, 255, 0.65);
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: 300;
+            position: relative;
+            letter-spacing: 0.3px;
+        }
+
+        .gold-bar {
+            width: 60px;
+            height: 3px;
+            background: var(--gold-primary);
+            margin: 18px auto 0;
+            border-radius: 2px;
+            position: relative;
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 52px 0;
+        }
+
+        section + section {
+            border-top: 1px solid rgba(13, 27, 94, 0.08);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: var(--navy-deep);
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
+        /* ── Swatch grid ── */
+        .swatch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .swatch-card {
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(13, 27, 94, 0.10);
+            background: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .swatch-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(13, 27, 94, 0.15);
+        }
+
+        .swatch-block {
+            height: 110px;
+            display: flex;
+            align-items: flex-end;
+            padding: 10px 14px;
+        }
+
+        .swatch-hex {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
+        }
+
+        .swatch-info {
+            padding: 14px 16px 16px;
+        }
+
+        .swatch-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--navy-deep);
+            margin-bottom: 4px;
+        }
+
+        .swatch-role {
+            font-size: 0.78rem;
+            color: #777;
+            line-height: 1.4;
+        }
+
+        /* ── Usage guide cards ── */
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .usage-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 24px;
+            border-left: 4px solid transparent;
+            box-shadow: 0 2px 12px rgba(13, 27, 94, 0.07);
+            transition: box-shadow 0.2s;
+        }
+
+        .usage-card:hover {
+            box-shadow: 0 6px 24px rgba(13, 27, 94, 0.13);
+        }
+
+        .usage-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .color-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .usage-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--navy-deep);
+        }
+
+        .usage-card h3 small {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 400;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .usage-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .usage-list li {
+            padding: 6px 0 6px 18px;
+            font-size: 0.84rem;
+            color: #444;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .usage-list li:last-child {
+            border-bottom: none;
+        }
+
+        .usage-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        /* ── CSS Variables block ── */
+        .css-block {
+            background: var(--navy-deep);
+            border-radius: 14px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .css-block::before {
+            content: ':root { }';
+            position: absolute;
+            right: 24px;
+            top: 20px;
+            font-family: monospace;
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.03);
+            font-weight: 900;
+        }
+
+        .css-block pre {
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            color: #c8d6e5;
+            line-height: 2;
+            overflow-x: auto;
+        }
+
+        .css-block pre .key {
+            color: #C8A064;
+        }
+
+        .css-block pre .val {
+            color: #7ECFB3;
+        }
+
+        .css-block pre .comment {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* ── Live preview ── */
+        .preview-wrap {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 32px rgba(13, 27, 94, 0.12);
+        }
+
+        .preview-nav {
+            background: var(--navy-deep);
+            padding: 16px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .preview-nav .logo-text {
+            font-family: 'Playfair Display', serif;
+            color: var(--gold-primary);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .preview-nav .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .preview-nav .nav-links a {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.82rem;
+            text-decoration: none;
+            font-weight: 400;
+            transition: color 0.2s;
+        }
+
+        .preview-nav .nav-links a:hover {
+            color: var(--gold-primary);
+        }
+
+        .preview-hero {
+            background: linear-gradient(135deg, var(--navy-deep), var(--navy-light));
+            padding: 48px 32px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .preview-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .preview-hero p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary-p {
+            background: var(--gold-primary);
+            color: var(--navy-deep);
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-right: 10px;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.2s;
+        }
+
+        .btn-primary-p:hover {
+            background: var(--gold-warm);
+        }
+
+        .btn-outline-p {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .preview-cards {
+            background: var(--off-white);
+            padding: 28px 32px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .p-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 18px;
+            border-top: 3px solid var(--gold-primary);
+            box-shadow: 0 2px 8px rgba(13, 27, 94, 0.07);
+        }
+
+        .p-card-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--gold-warm);
+            margin-bottom: 6px;
+        }
+
+        .p-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            color: var(--navy-deep);
+            font-weight: 700;
+        }
+
+        .p-card-text {
+            font-size: 0.78rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .preview-footer {
+            background: var(--navy-deep);
+            padding: 16px 28px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .preview-footer span {
+            color: var(--gold-primary);
+        }
+
+        /* ── Contrast table ── */
+        .contrast-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .contrast-table th {
+            background: var(--navy-deep);
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+        }
+
+        .contrast-table td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .contrast-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .contrast-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .badge-pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warn {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .color-pair-preview {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            gap: 6px;
+        }
+
+        .dot-sm {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<div class="page-header">
+    <h1><span>Edu</span>Gate</h1>
+    <p>Brand Color Palette &amp; Usage Guide</p>
+    <div class="gold-bar"></div>
+</div>
+
+<!-- ════════════════════ SWATCHES ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>Extracted Color Palette</h2>
+        <p class="section-sub">7 core colors drawn directly from the flyer — primary, secondary, and supporting
+            tones.</p>
+
+        <div class="swatch-grid">
+
+            <!-- Navy Deep -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#0D1B5E;">
+                    <span class="swatch-hex" style="color:#fff;">#0D1B5E</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Deep Navy</div>
+                    <div class="swatch-role">Primary brand colour · Banners, navbars, headers, footer backgrounds</div>
+                </div>
+            </div>
+
+            <!-- Navy Mid -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#1A2B7A;">
+                    <span class="swatch-hex" style="color:#fff;">#1A2B7A</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Royal Navy</div>
+                    <div class="swatch-role">Secondary navy · Gradient partner, hover states, section dividers</div>
+                </div>
+            </div>
+
+            <!-- Navy Light -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#3C508C;">
+                    <span class="swatch-hex" style="color:#fff;">#3C508C</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Steel Navy</div>
+                    <div class="swatch-role">Tertiary navy · Gradient end, active tabs, icon backgrounds</div>
+                </div>
+            </div>
+
+            <!-- Gold Primary -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#C8A064;">
+                    <span class="swatch-hex" style="color:#3a2800;">#C8A064</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Expo Gold</div>
+                    <div class="swatch-role">Accent colour · CTA buttons, highlights, badges, borders, icons</div>
+                </div>
+            </div>
+
+            <!-- Gold Warm -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#B48C50;">
+                    <span class="swatch-hex" style="color:#3a2800;">#B48C50</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Warm Amber</div>
+                    <div class="swatch-role">Button hover, pressed states, card top borders</div>
+                </div>
+            </div>
+
+            <!-- Gold Pale -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#DCC8A0;">
+                    <span class="swatch-hex" style="color:#3a2800;">#DCC8A0</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Sand Tint</div>
+                    <div class="swatch-role">Info cards, section backgrounds, subtle highlights</div>
+                </div>
+            </div>
+
+            <!-- Off-white -->
+            <div class="swatch-card">
+                <div class="swatch-block" style="background:#F5F4EF; border: 1px solid #e8e8e8;">
+                    <span class="swatch-hex" style="color:#333;">#F5F4EF</span>
+                </div>
+                <div class="swatch-info">
+                    <div class="swatch-name">Ivory White</div>
+                    <div class="swatch-role">Page background, cards · warmer than pure white, reduces eye strain</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ USAGE GUIDE ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>When &amp; How to Use Each Color</h2>
+        <p class="section-sub">Expert guidance on applying each color for maximum impact and consistency.</p>
+
+        <div class="usage-grid">
+
+            <div class="usage-card" style="border-left-color:#0D1B5E;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#0D1B5E;"></div>
+                    <h3>Deep Navy #0D1B5E <small>Use at ~40% of the design</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Navigation bar background</li>
+                    <li>Page footers and dark sections</li>
+                    <li>Hero section backgrounds</li>
+                    <li>Modal overlays &amp; sidebars</li>
+                    <li>Text color on light backgrounds for headings</li>
+                    <li>Primary button background when gold is unavailable</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#1A2B7A;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#1A2B7A;"></div>
+                    <h3>Royal Navy #1A2B7A <small>Use at ~15% of the design</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Gradient midpoint (Deep → Steel Navy)</li>
+                    <li>Hover state for dark nav links</li>
+                    <li>Section header pill/badge backgrounds</li>
+                    <li>Timeline or stepper active color</li>
+                    <li>Focus ring on dark surfaces</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#3C508C;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#3C508C;"></div>
+                    <h3>Steel Navy #3C508C <small>Use at ~10% of the design</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Gradient end / lighter dark surfaces</li>
+                    <li>Icon button backgrounds</li>
+                    <li>Tag / chip borders on dark UI</li>
+                    <li>Secondary text on dark cards</li>
+                    <li>Dividers within dark sections</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#C8A064;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#C8A064;"></div>
+                    <h3>Expo Gold #C8A064 <small>Use at ~15% — the hero accent</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Primary CTA buttons ("Register Now", "Explore")</li>
+                    <li>Active nav indicator / underline</li>
+                    <li>Highlighted text spans &amp; key stats</li>
+                    <li>Card top-border accent stripe</li>
+                    <li>Logo accent color</li>
+                    <li>Star ratings, award icons</li>
+                    <li>Section label pills on dark backgrounds</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#B48C50;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#B48C50;"></div>
+                    <h3>Warm Amber #B48C50 <small>Interaction / depth only</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Hover &amp; pressed state for gold buttons</li>
+                    <li>Darker gold text on gold backgrounds</li>
+                    <li>Link hover color in body text</li>
+                    <li>Decorative border-bottom on headings</li>
+                    <li>Form focus ring on light fields</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#DCC8A0;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#DCC8A0;"></div>
+                    <h3>Sand Tint #DCC8A0 <small>Backgrounds &amp; cards</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Info/announcement card backgrounds</li>
+                    <li>Alternating table row shading</li>
+                    <li>Tooltip &amp; popover backgrounds</li>
+                    <li>Input field background on navy sections</li>
+                    <li>Subtle section background variation</li>
+                </ul>
+            </div>
+
+            <div class="usage-card" style="border-left-color:#F5F4EF;">
+                <div class="usage-card-header">
+                    <div class="color-dot" style="background:#F5F4EF; border:2px solid #ddd;"></div>
+                    <h3>Ivory White #F5F4EF <small>The breathing space (~20%)</small></h3>
+                </div>
+                <ul class="usage-list">
+                    <li>Main page / app background</li>
+                    <li>White card bodies</li>
+                    <li>Form field backgrounds</li>
+                    <li>Text on navy: always white/ivory</li>
+                    <li>Spacing between dense sections</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ CSS VARIABLES ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>Ready-to-Use CSS Variables</h2>
+        <p class="section-sub">Copy this into your project's global stylesheet or Tailwind config.</p>
+        <div class="css-block">
+        <pre>
+<span class="comment">/* ── EduGate Brand Palette ─────────────────────────── */</span>
+:root {
+  <span class="comment">/* Navy family */</span>
+  <span class="key">--color-navy-deep</span>:    <span class="val">#0D1B5E</span>;   <span class="comment">/* primary brand, navbars, footer */</span>
+  <span class="key">--color-navy-mid</span>:     <span class="val">#1A2B7A</span>;   <span class="comment">/* gradient midpoint, hover states */</span>
+  <span class="key">--color-navy-light</span>:   <span class="val">#3C508C</span>;   <span class="comment">/* gradient end, icons */</span>
+
+  <span class="comment">/* Gold family */</span>
+  <span class="key">--color-gold</span>:         <span class="val">#C8A064</span>;   <span class="comment">/* CTAs, highlights, badges */</span>
+  <span class="key">--color-gold-dark</span>:    <span class="val">#B48C50</span>;   <span class="comment">/* hover / pressed states */</span>
+  <span class="key">--color-gold-pale</span>:    <span class="val">#DCC8A0</span>;   <span class="comment">/* card & section backgrounds */</span>
+
+  <span class="comment">/* Neutrals */</span>
+  <span class="key">--color-bg</span>:           <span class="val">#F5F4EF</span>;   <span class="comment">/* page background */</span>
+  <span class="key">--color-white</span>:        <span class="val">#FFFFFF</span>;   <span class="comment">/* card surfaces */</span>
+  <span class="key">--color-text</span>:         <span class="val">#0D1B5E</span>;   <span class="comment">/* body text on light bg */</span>
+  <span class="key">--color-text-muted</span>:   <span class="val">#5A6480</span>;   <span class="comment">/* secondary text */</span>
+}
+
+<span class="comment">/* ── Tailwind theme extension ───────────────────────── */</span>
+<span class="comment">/* tailwind.config.js → theme.extend.colors: */</span>
+<span class="val">navy</span>: {
+  DEFAULT: <span class="val">'#0D1B5E'</span>,
+  mid:     <span class="val">'#1A2B7A'</span>,
+  light:   <span class="val">'#3C508C'</span>,
+},
+<span class="val">gold</span>: {
+  DEFAULT: <span class="val">'#C8A064'</span>,
+  dark:    <span class="val">'#B48C50'</span>,
+  pale:    <span class="val">'#DCC8A0'</span>,
+},</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ LIVE PREVIEW ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>Live UI Preview</h2>
+        <p class="section-sub">See how the palette behaves on a real website layout.</p>
+
+        <div class="preview-wrap">
+            <nav class="preview-nav">
+                <span class="logo-text">EduGate</span>
+                <div class="nav-links">
+                    <a href="#">About</a>
+                    <a href="#">Exhibitors</a>
+                    <a href="#">Register</a>
+                    <a href="#" style="color:#C8A064; font-weight:600;">Contact</a>
+                </div>
+            </nav>
+
+            <div class="preview-hero">
+                <p style="font-size:0.75rem; letter-spacing:2px; text-transform:uppercase; color:#C8A064; margin-bottom:8px;">
+                    26 – 27 February 2026</p>
+                <h2>Your Career. Your Future.</h2>
+                <p>SEAL Lifestyle Park, Chishawasha, Harare</p>
+                <br>
+                <button class="btn-primary-p">Register Now</button>
+                <button class="btn-outline-p">Learn More</button>
+            </div>
+
+            <div class="preview-cards">
+                <div class="p-card">
+                    <div class="p-card-label">Exhibitors</div>
+                    <div class="p-card-title">Universities &amp; Colleges</div>
+                    <div class="p-card-text">Connect with top institutions from all 10 provinces.</div>
+                </div>
+                <div class="p-card">
+                    <div class="p-card-label">What to Expect</div>
+                    <div class="p-card-title">Career Guidance &amp; Mentorship</div>
+                    <div class="p-card-text">Direct engagement with professionals and scholarship info.</div>
+                </div>
+                <div class="p-card">
+                    <div class="p-card-label">Attendees</div>
+                    <div class="p-card-title">High School &amp; Tertiary Students</div>
+                    <div class="p-card-text">Open to students from all 10 Zimbabwean provinces.</div>
+                </div>
+            </div>
+
+            <div class="preview-footer">
+                © 2026 <span>EduGate</span> · Powered by Nyaradzo Group · #SahwiraMukuru
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ CONTRAST TABLE ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>Accessibility Contrast Guide</h2>
+        <p class="section-sub">Which color combinations are accessible (WCAG 2.1). Always verify with a live contrast
+            checker.</p>
+
+        <div style="overflow-x:auto; border-radius:12px; box-shadow:0 2px 12px rgba(13,27,94,0.08);">
+            <table class="contrast-table">
+                <thead>
+                <tr>
+                    <th>Combination</th>
+                    <th>Preview</th>
+                    <th>Approx. Ratio</th>
+                    <th>WCAG AA (text)</th>
+                    <th>Best Use</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>White on Deep Navy</strong></td>
+                    <td><span class="color-pair-preview" style="background:#0D1B5E;color:#fff;">Sample Text</span></td>
+                    <td>≈ 13.5 : 1</td>
+                    <td><span class="badge badge-pass">✓ AAA Pass</span></td>
+                    <td>Nav links, body text on dark sections</td>
+                </tr>
+                <tr>
+                    <td><strong>Gold on Deep Navy</strong></td>
+                    <td><span class="color-pair-preview" style="background:#0D1B5E;color:#C8A064;">Sample Text</span>
+                    </td>
+                    <td>≈ 5.8 : 1</td>
+                    <td><span class="badge badge-pass">✓ AA Pass</span></td>
+                    <td>Section labels, nav active states, badges</td>
+                </tr>
+                <tr>
+                    <td><strong>Deep Navy on Gold</strong></td>
+                    <td><span class="color-pair-preview" style="background:#C8A064;color:#0D1B5E;">Sample Text</span>
+                    </td>
+                    <td>≈ 5.8 : 1</td>
+                    <td><span class="badge badge-pass">✓ AA Pass</span></td>
+                    <td>CTA button text — the ideal combo</td>
+                </tr>
+                <tr>
+                    <td><strong>Deep Navy on Ivory</strong></td>
+                    <td><span class="color-pair-preview" style="background:#F5F4EF;color:#0D1B5E;">Sample Text</span>
+                    </td>
+                    <td>≈ 12.1 : 1</td>
+                    <td><span class="badge badge-pass">✓ AAA Pass</span></td>
+                    <td>Body text, headings on page background</td>
+                </tr>
+                <tr>
+                    <td><strong>Deep Navy on Sand</strong></td>
+                    <td><span class="color-pair-preview" style="background:#DCC8A0;color:#0D1B5E;">Sample Text</span>
+                    </td>
+                    <td>≈ 7.4 : 1</td>
+                    <td><span class="badge badge-pass">✓ AA Pass</span></td>
+                    <td>Card headings, info box text</td>
+                </tr>
+                <tr>
+                    <td><strong>Gold on Ivory White</strong></td>
+                    <td><span class="color-pair-preview" style="background:#F5F4EF;color:#C8A064;">Sample Text</span>
+                    </td>
+                    <td>≈ 2.2 : 1</td>
+                    <td><span class="badge badge-fail">✗ Fail (text)</span></td>
+                    <td>Decorative only — not for readable text</td>
+                </tr>
+                <tr>
+                    <td><strong>White on Steel Navy</strong></td>
+                    <td><span class="color-pair-preview" style="background:#3C508C;color:#fff;">Sample Text</span></td>
+                    <td>≈ 5.1 : 1</td>
+                    <td><span class="badge badge-pass">✓ AA Pass</span></td>
+                    <td>Chip/tag text, secondary dark buttons</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════ RULE OF THUMB ════════════════════ -->
+<section>
+    <div class="container">
+        <h2>The Golden Rule: 60 – 30 – 10</h2>
+        <p class="section-sub">A proven distribution formula for the EduGate palette.</p>
+        <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:20px;">
+
+            <div style="background:#0D1B5E; border-radius:14px; padding:28px; color:#fff; text-align:center;">
+                <div style="font-size:3rem; font-family:'Playfair Display',serif; color:#C8A064; font-weight:900;">60%
+                </div>
+                <div style="font-weight:600; margin: 8px 0 4px;">Navy Blues</div>
+                <div style="font-size:0.8rem; color:rgba(255,255,255,0.6); line-height:1.5;">Navbars, footers, hero
+                    sections,
+                    backgrounds. The dominant brand colour that establishes trust &amp; authority.
+                </div>
+            </div>
+
+            <div style="background:#F5F4EF; border:2px solid #e0ddd5; border-radius:14px; padding:28px; text-align:center;">
+                <div style="font-size:3rem; font-family:'Playfair Display',serif; color:#0D1B5E; font-weight:900;">30%
+                </div>
+                <div style="font-weight:600; color:#0D1B5E; margin: 8px 0 4px;">Ivory &amp; Sand</div>
+                <div style="font-size:0.8rem; color:#666; line-height:1.5;">Page backgrounds, card surfaces, form
+                    fields.
+                    Provides visual rest and contrast against the navy.
+                </div>
+            </div>
+
+            <div style="background:#C8A064; border-radius:14px; padding:28px; text-align:center;">
+                <div style="font-size:3rem; font-family:'Playfair Display',serif; color:#0D1B5E; font-weight:900;">10%
+                </div>
+                <div style="font-weight:600; color:#0D1B5E; margin: 8px 0 4px;">Expo Gold</div>
+                <div style="font-size:0.8rem; color:rgba(0,0,0,0.55); line-height:1.5;">CTAs, highlights, icons, badges.
+                    Used
+                    sparingly so it commands attention every single time it appears.
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+</body>
+
+</html>
