@@ -7,13 +7,14 @@ import {
     AlertCircle,
     CheckCircle2,
     ChevronRight,
+    Clock,
     CreditCard,
     ExternalLink,
     Globe,
     Loader2,
     ShieldCheck,
     Smartphone,
-    Wifi,
+    Wifi
 } from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
@@ -331,6 +332,73 @@ const SahwiPayCheckout = ({registrationIds}) => {
     );
 };
 
+// ─── Pay Later Modal ─────────────────────────────────────────────────────────
+
+const PayLaterModal = ({isOpen, onClose, onConfirm}) => {
+
+    if (!isOpen) return null;
+
+    return (
+
+        <div
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200 text-center">
+
+            <div
+                className="bg-[#f8f5f0] rounded-3xl p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200 border border-[#e8e4da]">
+
+                <div
+                    className="w-16 h-16 bg-[#fff9e6] rounded-full flex items-center justify-center mb-6 mx-auto border border-[#f0e6cc]">
+
+                    <Clock className="w-8 h-8 text-[#d4af37]"/>
+
+                </div>
+
+                <h3 className="text-2xl font-bold text-[#0a1e3c] mb-2">Secure Your Spot Soon!</h3>
+
+                <p className="text-[#5a6987] mb-8 leading-relaxed">
+
+                    You have limited time to secure your registration. Unpaid spots may be released if the event reaches
+                    capacity or the deadline passes.
+
+                </p>
+
+                <div className="grid gap-3">
+
+                    <button
+
+                        onClick={onClose}
+
+                        className="w-full py-4 bg-[#0a1e3c] text-[#f8f5f0] rounded-2xl font-bold hover:bg-[#1a2e4c] transition-all shadow-lg shadow-[#0a1e3c]/20 border border-[#1a2e4c]"
+
+                    >
+
+                        Complete Payment Now
+
+                    </button>
+
+                    <button
+
+                        onClick={onConfirm}
+
+                        className="w-full py-4 bg-[#f8f5f0] text-[#0a1e3c] rounded-2xl font-bold hover:bg-[#e8e4da] transition-all border border-[#e8e4da]"
+
+                    >
+
+                        Proceed to Pay Later
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    );
+
+};
+
+
 // ─── Gateway icon helpers ─────────────────────────────────────────────────────
 const GATEWAY_BADGE_COLORS = {
     stripe: 'bg-indigo-100 text-indigo-600',
@@ -346,6 +414,7 @@ const InitiatePaymentPage = () => {
     const registrationIds = searchParams.getAll('registration_ids[]');
 
     const [selectedGateway, setSelectedGateway] = useState(null);
+    const [showPayLater, setShowPayLater] = useState(false);
 
     const {data: registrations, isLoading: isLoadingRegistrations} = useQuery({
         queryKey: ['registrations', registrationIds],
@@ -568,8 +637,28 @@ const InitiatePaymentPage = () => {
                                 </p>
                             </div>
                         </div>
+
+                        {/* Pay Later Trigger */}
+                        <div className="mt-4">
+                            <button
+                                onClick={() => setShowPayLater(true)}
+                                className="w-full rounded-lg py-3 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
+                                style={{backgroundColor: 'var(--color-gold)', color: 'var(--color-navy-deep)'}}
+                                onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--color-gold-dark)'}
+                                onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--color-gold)'}
+                            >
+                                I'll pay later
+                            </button>
+                        </div>
                     </div>
                 </div>
+
+                {/* Pay Later Modal */}
+                <PayLaterModal
+                    isOpen={showPayLater}
+                    onClose={() => setShowPayLater(false)}
+                    onConfirm={() => navigate('/my-registrations')}
+                />
             </div>
         </div>
     );
