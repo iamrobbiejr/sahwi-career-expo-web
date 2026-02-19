@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {paymentsService} from '../services/api';
-import {CheckCircle2, ChevronLeft, Clock, Loader2, RefreshCw, Ticket, XCircle} from 'lucide-react';
+import {CheckCircle2, ChevronLeft, Clock, Loader2, RefreshCw, Smartphone, Ticket, XCircle} from 'lucide-react';
 import {toast} from 'react-hot-toast';
 
 const PaymentDetailsPage = () => {
@@ -113,10 +113,10 @@ const PaymentDetailsPage = () => {
                     </h1>
                     <p className="text-gray-500">Transaction ID: {payment.id}</p>
                     <div className="mt-4 flex justify-center">
-            <span
-                className={`px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider ${getStatusColor(payment.status)}`}>
-              {payment.status}
-            </span>
+                        <span
+                            className={`px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider ${getStatusColor(payment.status)}`}>
+                            {payment.status}
+                        </span>
                     </div>
                 </div>
 
@@ -132,8 +132,8 @@ const PaymentDetailsPage = () => {
                             <div className="flex justify-between py-2 border-b border-gray-50">
                                 <span className="text-gray-500">Amount</span>
                                 <span className="font-bold text-primary-600">
-                  {payment.currency} {(payment.amount_cents / 100).toFixed(2)}
-                </span>
+                                    {payment.currency} {(payment.amount_cents / 100).toFixed(2)}
+                                </span>
                             </div>
                             <div className="flex justify-between py-2 border-b border-gray-50">
                                 <span className="text-gray-500">Gateway</span>
@@ -144,13 +144,35 @@ const PaymentDetailsPage = () => {
                                 <span
                                     className="font-semibold text-gray-900 capitalize">{payment.payment_method?.replace('_', ' ')}</span>
                             </div>
+                            {payment.payment_phone && (
+                                <div className="flex justify-between py-2 border-b border-gray-50">
+                                    <span className="text-gray-500">Phone</span>
+                                    <span className="font-semibold text-gray-900">{payment.payment_phone}</span>
+                                </div>
+                            )}
                             <div className="flex justify-between py-2 border-b border-gray-50">
                                 <span className="text-gray-500">Date</span>
                                 <span className="font-semibold text-gray-900">
-                  {new Date(payment.created_at).toLocaleString()}
-                </span>
+                                    {new Date(payment.created_at).toLocaleString()}
+                                </span>
                             </div>
                         </div>
+
+                        {/* Gateway Instructions (e.g. for Paynow Express) */}
+                        {payment.status === 'processing' && payment.gateway_response?.initialization?.instructions && (
+                            <div className="mt-8 p-4 bg-primary-50 border border-primary-100 rounded-2xl">
+                                <h4 className="text-sm font-bold text-primary-900 mb-2 flex items-center gap-2">
+                                    <Smartphone className="w-4 h-4"/>
+                                    Next Steps
+                                </h4>
+                                <p className="text-sm text-primary-700 leading-relaxed">
+                                    {payment.gateway_response.initialization.instructions}
+                                </p>
+                                <p className="text-[10px] text-primary-500 mt-2 italic">
+                                    This status updates automatically. You can also click the verify button below.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Actions & Items */}

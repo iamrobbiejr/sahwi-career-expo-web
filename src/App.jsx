@@ -25,6 +25,7 @@ import MyRegistrationsPage from './pages/MyRegistrationsPage';
 import InitiatePaymentPage from './pages/InitiatePaymentPage';
 import PaymentDetailsPage from './pages/PaymentDetailsPage';
 import PaymentVerifyPage from './pages/PaymentVerifyPage';
+import SahwiPayReturnPage from './pages/SahwiPayReturnPage';
 import TicketDetailsPage from './pages/TicketDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -218,10 +219,10 @@ function App() {
                             }
                         />
                         <Route
-                            path="payments/:id"
+                            path="payments/verify"
                             element={
                                 <ProtectedRoute>
-                                    <PaymentDetailsPage/>
+                                    <PaymentVerifyPage/>
                                 </ProtectedRoute>
                             }
                         />
@@ -230,6 +231,22 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <PaymentVerifyPage/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="payments/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <PaymentDetailsPage/>
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="payments/sahwipay-return"
+                            element={
+                                <ProtectedRoute>
+                                    <SahwiPayReturnPage/>
                                 </ProtectedRoute>
                             }
                         />

@@ -320,6 +320,8 @@ export const paymentsService = {
     getMyPayments: (params) => apiClient.get('/my-payments', {params}),
     refund: (id, data) => apiClient.post(`/payments/${id}/refund`, data),
     getRefunds: (params) => apiClient.get('/refunds', {params}),
+    // SahwiPay: forward redirect params back to backend to record payment outcome
+    webhookSahwipay: (data) => apiClient.post('/webhooks/sahwipay', data),
 };
 
 export const ticketsService = {
