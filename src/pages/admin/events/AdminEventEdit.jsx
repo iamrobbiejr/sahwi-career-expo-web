@@ -1,19 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {eventsService, fileService} from '../../../services/api';
 import {formatImageUrl} from '../../../utils/format';
 import {toast} from 'react-hot-toast';
 import {
+    Calendar,
     ChevronLeft,
-    Loader2,
-    Upload,
+    Clock,
+    DollarSign,
     Image as ImageIcon,
+    Loader2,
+    MapPin,
     Plus,
     Trash2,
-    Calendar,
-    Users,
-    Clock,
-    MapPin, DollarSign
+    Upload,
+    Users
 } from 'lucide-react';
 
 const AdminEventEdit = () => {
@@ -169,6 +170,13 @@ const AdminEventEdit = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validation: End date must be after start date
+        if (new Date(formData.end_date) <= new Date(formData.start_date)) {
+            toast.error('End date must be after start date');
+            return;
+        }
+
         setIsLoading(true);
         try {
             let bannerUrl = formData.banner;

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useLocation} from 'react-router-dom';
 import {Plus} from 'lucide-react';
 import ThreadList from '../components/messages/ThreadList';
@@ -16,11 +16,19 @@ const MessagesPage = () => {
         }
     }, [location.state]);
 
+    const handleBackToList = () => {
+        setSelectedThreadId(null);
+    };
+
     return (
-        <div className="h-[calc(100vh-120px)] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex h-full bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+        <div className="h-[calc(100vh-120px)] max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-0 sm:py-4">
+            <div
+                className="flex h-full bg-white rounded-none sm:rounded-xl shadow-none sm:shadow-lg overflow-hidden border-0 sm:border border-gray-200">
                 {/* Thread List Sidebar */}
-                <div className="w-1/3 border-r border-gray-200 flex flex-col bg-gray-50/50">
+                <div className={`
+                    ${selectedThreadId ? 'hidden lg:flex' : 'flex'} 
+                    w-full lg:w-1/3 border-r border-gray-200 flex flex-col bg-gray-50/50
+                `}>
                     <div className="p-4 border-b border-gray-200 bg-white flex items-center justify-between">
                         <h1 className="text-xl font-bold text-gray-900">Messages</h1>
                         <button
@@ -38,11 +46,18 @@ const MessagesPage = () => {
                 </div>
 
                 {/* Message Window */}
-                <div className="flex-1 flex flex-col min-w-0 bg-white">
+                <div className={`
+                    ${!selectedThreadId ? 'hidden lg:flex' : 'flex'} 
+                    flex-1 flex flex-col min-w-0 bg-white
+                `}>
                     {selectedThreadId ? (
-                        <MessageWindow threadId={selectedThreadId}/>
+                        <MessageWindow
+                            threadId={selectedThreadId}
+                            onBack={handleBackToList}
+                        />
                     ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 text-center p-8">
+                        <div
+                            className="hidden lg:flex flex-1 flex flex-col items-center justify-center bg-gray-50 text-center p-8">
                             <div
                                 className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mb-4">
                                 <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor"

@@ -5,8 +5,9 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import {useAuthStore} from '../../store';
 import toast from 'react-hot-toast';
+import {ChevronLeft} from 'lucide-react';
 
-const MessageWindow = ({threadId}) => {
+const MessageWindow = ({threadId, onBack}) => {
     const queryClient = useQueryClient();
     const {user} = useAuthStore();
     const [pendingMessages, setPendingMessages] = useState([]);
@@ -133,6 +134,14 @@ const MessageWindow = ({threadId}) => {
             {/* Thread Header */}
             <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white shadow-sm z-10">
                 <div className="flex items-center gap-3">
+                    {/* Mobile Back Button */}
+                    <button
+                        onClick={onBack}
+                        className="lg:hidden p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                        <ChevronLeft className="w-6 h-6 text-gray-600"/>
+                    </button>
+
                     <div
                         className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
                         {(thread?.creator?.name || 'T').charAt(0).toUpperCase()}

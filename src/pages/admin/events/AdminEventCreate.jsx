@@ -3,16 +3,16 @@ import {useNavigate} from 'react-router-dom';
 import {eventsService, fileService} from '../../../services/api';
 import {toast} from 'react-hot-toast';
 import {
-    ChevronLeft,
-    Upload,
-    Image as ImageIcon,
     Calendar,
-    MapPin,
-    DollarSign,
-    Users,
+    ChevronLeft,
     Clock,
+    DollarSign,
+    Image as ImageIcon,
+    MapPin,
     Plus,
-    Trash2
+    Trash2,
+    Upload,
+    Users
 } from 'lucide-react';
 
 const AdminEventCreate = () => {
@@ -101,6 +101,13 @@ const AdminEventCreate = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validation: End date must be after start date
+        if (new Date(formData.end_date) <= new Date(formData.start_date)) {
+            toast.error('End date must be after start date');
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -127,15 +134,18 @@ const AdminEventCreate = () => {
                 }
             });
 
-            // Convert price to price_cents if needed, but the model says price_cents
-            // Let's check how the backend handles 'price' vs 'price_cents'
-            // Based on model: 'price_cents' => 'integer'
+            // Ensure registration_deadline is included if present
+            if (formData.registration_deadline) {
+                cleanData.registration_deadline = formData.registration_deadline;
+            }
+
+            // Convert price to price_cents if needed
             if (cleanData.is_paid && cleanData.price) {
                 cleanData.price_cents = Math.round(parseFloat(cleanData.price) * 100);
                 delete cleanData.price;
             }
 
-            await eventsService.bulkStore(cleanData);
+            await eventsService.adminCreate(cleanData);
             toast.success('Event created successfully');
             navigate('/admin/events');
         } catch (err) {
@@ -670,6 +680,7 @@ const AdminEventCreate = () => {
                                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white"
                                             >
                                                 <option value="">Select Type</option>
+                                                <option value="career booth">Career Booth</option>
                                                 <option value="workshop">Workshop</option>
                                                 <option value="seminar">Seminar</option>
                                                 <option value="networking">Networking</option>

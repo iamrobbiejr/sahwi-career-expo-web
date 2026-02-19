@@ -20,13 +20,13 @@ import {
     Users,
     Video
 } from 'lucide-react';
-import {useAuthStore} from '../../store';
+import {useAuthStore, useUIStore} from '../../store';
 import Can from '../auth/Can';
 
 const Sidebar = () => {
     const location = useLocation();
-    const {isAuthenticated, user, hasRole, hasPermission} = useAuthStore();
-    const role = user?.role;
+    const {isAuthenticated, user, hasRole} = useAuthStore();
+    const {mobileMenuOpen, closeMobileMenu} = useUIStore();
     const [openMenus, setOpenMenus] = useState({});
 
     const toggleMenu = (label) => {
@@ -34,6 +34,12 @@ const Sidebar = () => {
             ...prev,
             [label]: !prev[label]
         }));
+    };
+
+    const handleLinkClick = () => {
+        if (window.innerWidth < 1024) { // Close sidebar on mobile after clicking a link
+            closeMobileMenu();
+        }
     };
 
     const studentLinks = [
@@ -128,7 +134,11 @@ const Sidebar = () => {
 
     return (
         <aside
-            className="hidden lg:flex flex-col w-64 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto"
+            className={`
+                fixed inset-y-0 left-0 z-[60] w-64 bg-white transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-auto lg:z-0
+                ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+                flex flex-col h-screen lg:h-[calc(100vh-4rem)] lg:sticky lg:top-16 overflow-y-auto
+            `}
             style={{backgroundColor: '#FFFFFF', borderRight: '1px solid #E8E7E1'}}
         >
             {/* Brand stripe at top */}
@@ -183,6 +193,7 @@ const Sidebar = () => {
                                                 <Link
                                                     key={child.path}
                                                     to={child.path}
+                                                    onClick={handleLinkClick}
                                                     className="flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-all duration-200"
                                                     style={isActive(child.path) ? activeLinkStyle : inactiveLinkStyle}
                                                 >
@@ -202,6 +213,7 @@ const Sidebar = () => {
                         <Link
                             key={link.path}
                             to={link.path}
+                            onClick={handleLinkClick}
                             className="flex items-center space-x-3 py-2.5 rounded-lg transition-all duration-200 text-sm font-medium"
                             style={isActive(link.path) ? activeLinkStyle : inactiveLinkStyle}
                         >
@@ -225,6 +237,7 @@ const Sidebar = () => {
                         <div className="space-y-2">
                             <Can perform="events.create">
                                 <button
+                                    onClick={handleLinkClick}
                                     className="w-full text-sm font-medium py-2 px-3 rounded-lg transition-all"
                                     style={{
                                         backgroundColor: 'var(--color-gold)',
@@ -239,6 +252,7 @@ const Sidebar = () => {
 
                             <Link
                                 to={'/messages'}
+                                onClick={handleLinkClick}
                                 className="block w-full text-sm font-medium py-2 px-3 rounded-lg transition-all text-center"
                                 style={{
                                     backgroundColor: 'rgba(255,255,255,0.12)',

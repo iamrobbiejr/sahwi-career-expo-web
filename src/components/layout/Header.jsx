@@ -9,9 +9,32 @@ const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const {user, logout, isAuthenticated} = useAuthStore();
-    const {toggleSidebar, toggleMobileMenu, mobileMenuOpen} = useUIStore();
+    const {toggleMobileMenu, mobileMenuOpen, closeMobileMenu} = useUIStore();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
+
+    // Close menus on page change
+    React.useEffect(() => {
+        setShowProfileMenu(false);
+        setShowNotifications(false);
+        closeMobileMenu();
+    }, [location, closeMobileMenu]);
+
+    // Close menus on click outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showProfileMenu && !event.target.closest('.profile-menu-container')) {
+                setShowProfileMenu(false);
+            }
+            if (showNotifications && !event.target.closest('.notifications-menu-container')) {
+                setShowNotifications(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showProfileMenu, showNotifications]);
+
 
     const handleLogout = async () => {
         try {
@@ -115,9 +138,12 @@ const Header = () => {
                         {isAuthenticated ? (
                             <>
                                 {/* Notifications */}
-                                <div className="relative">
+                                <div className="relative notifications-menu-container">
                                     <button
-                                        onClick={() => setShowNotifications(!showNotifications)}
+                                        onClick={() => {
+                                            setShowNotifications(!showNotifications);
+                                            setShowProfileMenu(false);
+                                        }}
                                         className="p-2 rounded-lg transition-colors relative"
                                         style={{color: 'rgba(255,255,255,0.75)'}}
                                         onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
@@ -176,9 +202,12 @@ const Header = () => {
                                 </div>
 
                                 {/* Profile Menu */}
-                                <div className="relative">
+                                <div className="relative profile-menu-container">
                                     <button
-                                        onClick={() => setShowProfileMenu(!showProfileMenu)}
+                                        onClick={() => {
+                                            setShowProfileMenu(!showProfileMenu);
+                                            setShowNotifications(false);
+                                        }}
                                         className="flex items-center space-x-2 p-1.5 rounded-lg transition-colors"
                                         onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
                                         onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}
@@ -279,59 +308,7 @@ const Header = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            <AnimatePresence>
-                {mobileMenuOpen && (
-                    <motion.div
-                        initial={{opacity: 0, height: 0}}
-                        animate={{opacity: 1, height: 'auto'}}
-                        exit={{opacity: 0, height: 0}}
-                        style={{
-                            borderTop: '1px solid var(--color-navy-mid)',
-                            backgroundColor: 'var(--color-navy-deep)'
-                        }}
-                        className="lg:hidden"
-                    >
-                        <nav className="px-4 py-4 space-y-1">
-                            {navItems.map((item) => (
-                                <Link
-                                    key={item.path}
-                                    to={item.path}
-                                    onClick={toggleMobileMenu}
-                                    className="block px-4 py-3 rounded-lg font-medium transition-all text-sm"
-                                    style={
-                                        isActive(item.path)
-                                            ? {backgroundColor: 'rgba(200,160,100,0.15)', color: 'var(--color-gold)'}
-                                            : {color: 'rgba(255,255,255,0.72)'}
-                                    }
-                                >
-                                    {item.label}
-                                </Link>
-                            ))}
-                            {!isAuthenticated && (
-                                <div className="pt-2 space-y-2 border-t" style={{borderColor: 'var(--color-navy-mid)'}}>
-                                    <Link to="/login" onClick={toggleMobileMenu}
-                                          className="block px-4 py-3 rounded-lg font-medium text-sm text-center"
-                                          style={{
-                                              color: 'rgba(255,255,255,0.80)',
-                                              border: '1px solid rgba(255,255,255,0.2)'
-                                          }}>
-                                        Sign In
-                                    </Link>
-                                    <Link to="/register" onClick={toggleMobileMenu}
-                                          className="block px-4 py-3 rounded-lg font-bold text-sm text-center"
-                                          style={{
-                                              backgroundColor: 'var(--color-gold)',
-                                              color: 'var(--color-navy-deep)'
-                                          }}>
-                                        Get Started
-                                    </Link>
-                                </div>
-                            )}
-                        </nav>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* The mobile menu nav links are now handled by the Sidebar which is made visible on mobile via the mobileMenuOpen state */}
         </header>
     );
 };
